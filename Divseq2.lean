@@ -40,7 +40,7 @@ inductive ExtsLimited : Nat → Prop where
 inductive SingleLimited : Nat → Prop where
   | is01 : SingleLimited 1
   | is02 : (l : Nat) → (ExtsLimited <| l) → (SingleLimited <| succ (succ (succ (succ ((succ (l * 2 * 2)) * 3)))))
-  | is03 : (m : Nat) → (ExtsLimited <| 2*m) → (SingleLimited <| 36*m+13)
+  | is03 : (m : Nat) → (ExtsLimited <| 2*m) → (SingleLimited <| (succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3))))))
   | is04 : (m : Nat) → (ExtsLimited <| 4*m+1) → (SingleLimited <| 36*m+25)
   | is05 : (m : Nat) → (ExtsLimited <| 8*m+7) → (SingleLimited <| 36*m+37)
   | is06 : (l : Nat) → (ExtsLimited <| 16*l+3) → (SingleLimited <| 18*l+4)
@@ -49,7 +49,7 @@ inductive SingleLimited : Nat → Prop where
   | is09 : (j : Nat) → (ExtsLimited <| j) → (SingleLimited <| succ (succ (j*3)))
   | is10 : SingleLimited 0
   | is11 : (k : Nat) → (ExtsLimited <| k) → (SingleLimited <| succ (succ (succ (k * 2 * 3))))
-  | is12 : (l : Nat) → (ExtsLimited <| 2*l) → (SingleLimited <| 18*l+6)
+  | is12 : (l : Nat) → (ExtsLimited <| 2*l) → (SingleLimited <| succ (succ (succ ((succ (l * 3 * 2)) * 3))))
   | is13 : (l : Nat) → (ExtsLimited <| 4*l+1) → (SingleLimited <| 18*l+12)
   | is14 : (l : Nat) → (ExtsLimited <| 8*l+7) → (SingleLimited <| 18*l+18)
 
