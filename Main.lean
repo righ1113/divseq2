@@ -7,6 +7,8 @@ open Nat
 
 namespace divseq2
   axiom h₀₃ (m : Nat) : 18 * (2 * m) + 13 = (succ ((succ (m * 3 * 2)) * 2)) * 3 + 2 + 2
+  axiom h₀₄ (m : Nat) : 9 * (4 * m + 1) + 16 = (succ (succ (succ (m * 3) * 2) * 2)) * 3 + 2 + 2
+  axiom h₀₅ (m : Nat) : (9 * (8 * m + 7) + 11) / 2 = (succ (succ (succ (succ (m * 3)) * 2) * 2)) * 3 + 2 + 2
   axiom h₀₆ (l : Nat) : (16 * l + 3) + (16 * l + 3 - 3) / 8 + 1 = l * 3 * 2 * 3 + 2 + 2
   axiom h₀₇ (l : Nat) : 8 * l + 4 + (8 * l + 4 - 4) / 4 * 5 + 6 = (succ (l * 3)) * 2 * 3 + 2 + 2
   axiom h₀₈ (l : Nat) : 4 * (4 * l + 3) + (4 * l + 3 - 3) / 2 + 4 = (succ (succ (l * 3))) * 2 * 3 + 2 + 2
@@ -14,29 +16,35 @@ namespace divseq2
   -- 十分条件
   theorem singleToExts (n : Nat) (p : SingleLimited (succ (succ n))) : ExtsLimited (n+2) := match p with
     | SingleLimited.is02 l p2 => match p2 with
-      | ExtsLimited.is09 _ p3 _ _ _ _ _ _ _ => p3
+      | ExtsLimited.is _ _ p3 _ _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is03 m p2 => match p2 with
-      | ExtsLimited.is09 _ _ _ _ p3 _ _ _ _ => have p4 := Eq.subst (h₀₃ m) p3; p4
-    | SingleLimited.is04 m p2 => sorry
-    | SingleLimited.is05 m p2 => sorry
+      | ExtsLimited.is _ _ _ _ _ p3 _ _ _ _ _ _ => have p4 := Eq.subst (h₀₃ m) p3; p4
+    | SingleLimited.is04 m p2 => match p2 with
+      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ p3 _ => have p4 := Eq.subst (h₀₄ m) p3; p4
+    | SingleLimited.is05 m p2 => match p2 with
+      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ p3 => have p4 := Eq.subst (h₀₅ m) p3; p4
     | SingleLimited.is06 l p2 => match p2 with
-      | ExtsLimited.is09 _ _ _ _ _ _ p3 _ _ => have p4 := Eq.subst (h₀₆ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ p3 _ _ _ _ => have p4 := Eq.subst (h₀₆ l) p3; p4
     | SingleLimited.is07 l p2 => match p2 with
-      | ExtsLimited.is09 _ _ _ _ _ _ _ p3 _ => have p4 := Eq.subst (h₀₇ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ _ p3 _ _ _ => have p4 := Eq.subst (h₀₇ l) p3; p4
     | SingleLimited.is08 l p2 => match p2 with
-      | ExtsLimited.is09 _ _ _ _ _ _ _ _ p3 => have p4 := Eq.subst (h₀₈ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ _ _ p3 _ _ => have p4 := Eq.subst (h₀₈ l) p3; p4
     | SingleLimited.is09 l p2 => match p2 with
-      | ExtsLimited.is09 _ _ p3 _ _ _ _ _ _ => p3
+      | ExtsLimited.is _ _ _ p3 _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is11 k p2 => match p2 with
-      | ExtsLimited.is09 _ _ _ p3 _ _ _ _ _ => p3
+      | ExtsLimited.is _ _ _ _ p3 _ _ _ _ _ _ _ => p3
     | SingleLimited.is12 l p2 => match p2 with
-      | ExtsLimited.is09 _ _ _ _ _ p3 _ _ _ => have p4 := Eq.subst (h₁₂ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ p3 _ _ _ _ _ => have p4 := Eq.subst (h₁₂ l) p3; p4
     | SingleLimited.is13 l p2 => sorry
     | SingleLimited.is14 l p2 => sorry
 
   axiom m₀₂₁ (l : Nat) : succ (succ (l - 2)) < succ (succ (succ (succ (succ (l * 2 * 2) * 3))))
   axiom m₀₃₁ (m : Nat) : succ (succ (2 * (m - 1))) < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3))))
   axiom m₀₃₂ (m : Nat) : 2 * (m - 1) + 2 = 2* m
+  axiom m₀₄₁ (m : Nat) : succ (succ (4 * m + 1 - 2)) < succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3))))
+  axiom m₀₄₂ (m : Nat) : 4 * m + 1 - 2 + 2 = 4 * m + 1
+  axiom m₀₅₁ (m : Nat) : succ (succ (8 * m + 7 - 2)) < succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3))))
+  axiom m₀₅₂ (m : Nat) : 8 * m + 7 - 2 + 2 = 8 * m + 7
   axiom m₀₆₁ (l : Nat) : succ (succ (16 * l + 3 - 2)) < succ (succ (succ (succ (l * 3 * 2 * 3))))
   axiom m₀₆₂ (l : Nat) : 16 * l + 3 - 2 + 2 = 16 * l + 3
   axiom m₀₇₁ (l : Nat) : succ (succ (8 * l + 4 - 2)) < succ (succ (succ (succ (succ (l * 3) * 2 * 3))))
@@ -91,8 +99,14 @@ namespace divseq2
                 have sin := rs (succ (succ (2 * (m - 1)))) (m₀₃₁ m);
                 have ext := singleToExts (2 * (m - 1)) sin; rw [m₀₃₂ m] at ext;
                 exact SingleLimited.is03 m ext;
-            | threeOne m  => sorry
-            | threeTwo m  => sorry
+            | threeOne m  =>
+                have sin := rs (succ (succ (4 * m + 1 - 2))) (m₀₄₁ m);
+                have ext := singleToExts (4 * m + 1 - 2) sin; rw [m₀₄₂ m] at ext;
+                exact SingleLimited.is04 m ext;
+            | threeTwo m  =>
+                have sin := rs (succ (succ (8 * m + 7 - 2))) (m₀₅₁ m);
+                have ext := singleToExts (8 * m + 7 - 2) sin; rw [m₀₅₂ m] at ext;
+                exact SingleLimited.is05 m ext;
   -- 最終的な定理
   def LimitedDivSeq (n : Nat) : SingleLimited n := WellFounded.fix' (measure id).wf makeLimitedDivSeq n
 end divseq2
