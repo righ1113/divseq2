@@ -6,15 +6,15 @@ import «Divseq2»
 open Nat
 
 namespace divseq2
-  axiom h₀₃ (m : Nat) : 18 * (2 * m) + 13 = (succ ((succ (m * 3 * 2)) * 2)) * 3 + 2 + 2
-  axiom h₀₄ (m : Nat) : 9 * (4 * m + 1) + 16 = (succ (succ (succ (m * 3) * 2) * 2)) * 3 + 2 + 2
-  axiom h₀₅ (m : Nat) : (9 * (8 * m + 7) + 11) / 2 = (succ (succ (succ (succ (m * 3)) * 2) * 2)) * 3 + 2 + 2
-  axiom h₀₆ (l : Nat) : (16 * l + 3) + (16 * l + 3 - 3) / 8 + 1 = l * 3 * 2 * 3 + 2 + 2
-  axiom h₀₇ (l : Nat) : 8 * l + 4 + (8 * l + 4 - 4) / 4 * 5 + 6 = (succ (l * 3)) * 2 * 3 + 2 + 2
-  axiom h₀₈ (l : Nat) : 4 * (4 * l + 3) + (4 * l + 3 - 3) / 2 + 4 = (succ (succ (l * 3))) * 2 * 3 + 2 + 2
-  axiom h₁₂ (l : Nat) : 9 * (2 * l) + 6 = (succ (l * 3 * 2)) * 3 + 1 + 2
-  axiom h₁₃ (l : Nat) : (9 * (4 * l + 1) + 15) / 2 = (succ (succ (l * 3) * 2)) * 3 + 1 + 2
-  axiom h₁₄ (l : Nat) : (9 * (8 * l + 7) + 9) / 4 = (succ (succ (succ (l * 3)) * 2)) * 3 + 1 + 2
+  theorem h₀₃ (m : Nat) : 18 * (2 * m) + 13 = (succ ((succ (m * 3 * 2)) * 2)) * 3 + 2 + 2 := by linarith
+  theorem h₀₄ (m : Nat) : 9 * (4 * m + 1) + 16 = (succ (succ (succ (m * 3) * 2) * 2)) * 3 + 2 + 2 := by linarith
+  axiom   h₀₅ (m : Nat) : (9 * (8 * m + 7) + 11) / 2 = (succ (succ (succ (succ (m * 3)) * 2) * 2)) * 3 + 2 + 2
+  axiom   h₀₆ (l : Nat) : (16 * l + 3) + (16 * l + 3 - 3) / 8 + 1 = l * 3 * 2 * 3 + 2 + 2
+  axiom   h₀₇ (l : Nat) : 8 * l + 4 + (8 * l + 4 - 4) / 4 * 5 + 6 = (succ (l * 3)) * 2 * 3 + 2 + 2
+  axiom   h₀₈ (l : Nat) : 4 * (4 * l + 3) + (4 * l + 3 - 3) / 2 + 4 = (succ (succ (l * 3))) * 2 * 3 + 2 + 2
+  theorem h₁₂ (l : Nat) : 9 * (2 * l) + 6 = (succ (l * 3 * 2)) * 3 + 1 + 2 := by linarith
+  axiom   h₁₃ (l : Nat) : (9 * (4 * l + 1) + 15) / 2 = (succ (succ (l * 3) * 2)) * 3 + 1 + 2
+  axiom   h₁₄ (l : Nat) : (9 * (8 * l + 7) + 9) / 4 = (succ (succ (succ (l * 3)) * 2)) * 3 + 1 + 2
   -- 十分条件
   theorem singleToExts (n : Nat) (p : SingleLimited (succ (succ n))) : ExtsLimited (n+2) := match p with
     | SingleLimited.is02 _ p2 => match p2 with
@@ -42,27 +42,27 @@ namespace divseq2
     | SingleLimited.is14 l p2 => match p2 with
       | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ _ p3 => have p4 := Eq.subst (h₁₄ l) p3; p4
 
-  axiom m₀₂₁ (l : Nat) : succ (succ (l - 2)) < succ (succ (succ (succ (succ (l * 2 * 2) * 3))))
-  axiom m₀₃₁ (m : Nat) : succ (succ (2 * m - 2)) < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3))))
-  axiom m₀₃₂ (m : Nat) : 2 * m - 2 + 2 = 2* m
-  axiom m₀₄₁ (m : Nat) : succ (succ (4 * m + 1 - 2)) < succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3))))
-  axiom m₀₄₂ (m : Nat) : 4 * m + 1 - 2 + 2 = 4 * m + 1
-  axiom m₀₅₁ (m : Nat) : succ (succ (8 * m + 7 - 2)) < succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3))))
-  axiom m₀₅₂ (m : Nat) : 8 * m + 7 - 2 + 2 = 8 * m + 7
-  axiom m₀₆₁ (l : Nat) : succ (succ (16 * l + 3 - 2)) < succ (succ (succ (succ (l * 3 * 2 * 3))))
-  axiom m₀₆₂ (l : Nat) : 16 * l + 3 - 2 + 2 = 16 * l + 3
-  axiom m₀₇₁ (l : Nat) : succ (succ (8 * l + 4 - 2)) < succ (succ (succ (succ (succ (l * 3) * 2 * 3))))
-  axiom m₀₇₂ (l : Nat) : 8 * l + 4 - 2 + 2 = 8 * l + 4
-  axiom m₀₈₁ (l : Nat) : succ (succ (4 * l + 3 - 2)) < succ (succ (succ (succ (succ (succ (l * 3)) * 2 * 3))))
-  axiom m₀₈₂ (l : Nat) : 4 * l + 3 - 2 + 2 = 4 * l + 3
-  axiom m₀₉₁ (j : Nat) : succ (succ (j - 2)) < succ (succ (j * 3))
-  axiom m₀₉₂ (j : Nat) : j - 2 + 2 = j
-  axiom m₁₁₁ (k : Nat) : succ (succ (k - 2)) < succ (succ (succ (k * 2 * 3)))
-  axiom m₁₂₁ (l : Nat) : succ (succ (2 * l - 2)) < succ (succ (succ (succ (l * 3 * 2) * 3)))
-  axiom m₁₃₁ (l : Nat) : succ (succ (4 * l + 1 - 2)) < succ (succ (succ (succ (succ (l * 3) * 2) * 3)))
-  axiom m₁₃₂ (l : Nat) : 4 * l + 1 - 2 + 2 = 4 * l + 1
-  axiom m₁₄₁ (l : Nat) : succ (succ (8 * l + 7 - 2)) < succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3)))
-  axiom m₁₄₂ (l : Nat) : 8 * l + 7 - 2 + 2 = 8 * l + 7
+  axiom   m₀₂₁ (l : Nat) : succ (succ (l - 2)) < succ (succ (succ (succ (succ (l * 2 * 2) * 3))))
+  axiom   m₀₃₁ (m : Nat) : succ (succ (2 * m - 2)) < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3))))
+  axiom   m₀₃₂ (m : Nat) : 2 * m - 2 + 2 = 2* m
+  axiom   m₀₄₁ (m : Nat) : succ (succ (4 * m + 1 - 2)) < succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3))))
+  axiom   m₀₄₂ (m : Nat) : 4 * m + 1 - 2 + 2 = 4 * m + 1
+  axiom   m₀₅₁ (m : Nat) : succ (succ (8 * m + 7 - 2)) < succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3))))
+  theorem m₀₅₂ (m : Nat) : 8 * m + 7 - 2 + 2 = 8 * m + 7 := rfl
+  axiom   m₀₆₁ (l : Nat) : succ (succ (16 * l + 3 - 2)) < succ (succ (succ (succ (l * 3 * 2 * 3))))
+  theorem m₀₆₂ (l : Nat) : 16 * l + 3 - 2 + 2 = 16 * l + 3 := rfl
+  axiom   m₀₇₁ (l : Nat) : succ (succ (8 * l + 4 - 2)) < succ (succ (succ (succ (succ (l * 3) * 2 * 3))))
+  theorem m₀₇₂ (l : Nat) : 8 * l + 4 - 2 + 2 = 8 * l + 4 := rfl
+  axiom   m₀₈₁ (l : Nat) : succ (succ (4 * l + 3 - 2)) < succ (succ (succ (succ (succ (succ (l * 3)) * 2 * 3))))
+  theorem m₀₈₂ (l : Nat) : 4 * l + 3 - 2 + 2 = 4 * l + 3 := rfl
+  axiom   m₀₉₁ (j : Nat) : succ (succ (j - 2)) < succ (succ (j * 3))
+  axiom   m₀₉₂ (j : Nat) : j - 2 + 2 = j
+  axiom   m₁₁₁ (k : Nat) : succ (succ (k - 2)) < succ (succ (succ (k * 2 * 3)))
+  axiom   m₁₂₁ (l : Nat) : succ (succ (2 * l - 2)) < succ (succ (succ (succ (l * 3 * 2) * 3)))
+  axiom   m₁₃₁ (l : Nat) : succ (succ (4 * l + 1 - 2)) < succ (succ (succ (succ (succ (l * 3) * 2) * 3)))
+  axiom   m₁₃₂ (l : Nat) : 4 * l + 1 - 2 + 2 = 4 * l + 1
+  axiom   m₁₄₁ (l : Nat) : succ (succ (8 * l + 7 - 2)) < succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3)))
+  theorem m₁₄₂ (l : Nat) : 8 * l + 7 - 2 + 2 = 8 * l + 7 := rfl
   def makeLimitedDivSeq (x : Nat) (rs : ∀ x₁, x₁ < x → SingleLimited x₁) : SingleLimited x := match x with
     | 0             => SingleLimited.is10 -- 6*<0>+3 = 3
     | 1             => SingleLimited.is01 -- 6*<1>+3 = 9
