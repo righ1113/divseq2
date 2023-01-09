@@ -40,6 +40,8 @@ inductive ExtsLimited : Nat → Prop where
       → (ExtsLimited <| 4*l+(l-3)/2+4)                  -- 08'
       → (ExtsLimited <| 9*l+16)                         -- 04'
       → (ExtsLimited <| (9*l+11)/2)                     -- 05'
+      → (ExtsLimited <| (9*l+15)/2)                     -- 13'
+      → (ExtsLimited <| (9*l+9)/4)                      -- 14'
         → (ExtsLimited <| l)
 
 inductive SingleLimited : Nat → Prop where
@@ -55,8 +57,8 @@ inductive SingleLimited : Nat → Prop where
   | is10 : SingleLimited 0
   | is11 : (k : Nat) → (ExtsLimited <| k) → (SingleLimited <| succ (succ (succ (k * 2 * 3))))
   | is12 : (l : Nat) → (ExtsLimited <| 2*l) → (SingleLimited <| succ (succ (succ ((succ (l * 3 * 2)) * 3))))
-  | is13 : (l : Nat) → (ExtsLimited <| 4*l+1) → (SingleLimited <| 18*l+12)
-  | is14 : (l : Nat) → (ExtsLimited <| 8*l+7) → (SingleLimited <| 18*l+18)
+  | is13 : (l : Nat) → (ExtsLimited <| 4*l+1) → (SingleLimited <| succ (succ (succ (succ (succ (l * 3) * 2) * 3))))
+  | is14 : (l : Nat) → (ExtsLimited <| 8*l+7) → (SingleLimited <| succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))))
 
 
 
