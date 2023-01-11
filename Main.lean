@@ -6,18 +6,17 @@ import «Divseq2»
 open Nat
 
 namespace divseq2
-  theorem h₀₃ (m : Nat) : 18 * (2 * m) + 11 = (succ ((succ (m * 3 * 2)) * 2)) * 3 + 2 := by linarith
-  theorem h₀₄ (m : Nat) : 9 * (4 * m + 1) + 14 = (succ (succ (succ (m * 3) * 2) * 2)) * 3 + 2 := by linarith
-  axiom   h₀₅ (m : Nat) : (9 * (8 * m + 7 - 2) + 25) / 2 = (succ (succ (succ (succ (m * 3)) * 2) * 2)) * 3 + 2
-  axiom   h₀₆ (l : Nat) : (16 * l + 3 - 2) + (16 * l + 3 - 2 - 1) / 8 + 1 = l * 3 * 2 * 3 + 2
-  axiom   h₀₇ (l : Nat) : 8 * l + 4 - 2 + (8 * l + 4 - 2 - 2) / 4 * 5 + 6 = (succ (l * 3)) * 2 * 3 + 2
-  axiom   h₀₈ (l : Nat) : 4 * (4 * l + 3 - 2) + (4 * l + 3 - 2 - 1) / 2 + 10 = (succ (succ (l * 3))) * 2 * 3 + 2
-  axiom   h₀₉ (j : Nat) : (j - 2) * 3 + 6 = j * 3
-  theorem h₁₂ (l : Nat) : 9 * (2 * l) + 4 = (succ (l * 3 * 2)) * 3 + 1 := by linarith
-  axiom   h₁₃ (l : Nat) : (9 * (4 * l + 1) + 11) / 2 = (succ (succ (l * 3) * 2)) * 3 + 1
-  axiom   h₁₄ (l : Nat) : (9 * (8 * l + 7) + 1) / 4 = (succ ((succ (succ (l * 3))) * 2)) * 3 + 1
+  theorem h₀₃ (m : Nat) : 18 * (2 * m) + 13 = succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))) := by linarith
+  theorem h₀₄ (m : Nat) : 9 * (4 * m + 1) + 16 = succ (succ (succ (succ ((succ ((succ ((succ (m * 3)) * 2)) * 2)) * 3)))) := by linarith
+  axiom   h₀₅ (m : Nat) : (9 * (8 * m + 7) - 7) / 2 = succ (succ (succ (succ ((succ (succ (succ (succ (m * 3)) * 2) * 2)) * 3))))
+  axiom   h₀₆ (l : Nat) : (16 * l + 3) + (16 * l + 3 - 3) / 8 + 1 = succ (succ (succ (succ (l * 3 * 2 * 3))))
+  axiom   h₀₇ (l : Nat) : 8 * l + 4 + (8 * l + 4 - 4) / 4 * 5 + 6 = succ (succ (succ (succ (((succ (l * 3)) * 2) * 3))))
+  axiom   h₀₈ (l : Nat) : 4 * (4 * l + 3) + (4 * l + 3 - 3) / 2 + 4 = succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3))))
+  theorem h₁₂ (l : Nat) : 9 * (2 * l) + 6 = succ (succ (succ ((succ (l * 3 * 2)) * 3))) := by linarith
+  axiom   h₁₃ (l : Nat) : (9 * (4 * l + 1) + 15) / 2 = succ (succ (succ ((succ ((succ (l * 3)) * 2)) * 3)))
+  axiom   h₁₄ (l : Nat) : (9 * (8 * l + 7) + 9) / 4 = succ (succ (succ ((succ ((succ (succ (l * 3))) * 2)) * 3)))
   -- 十分条件
-  theorem singleToExts (n : Nat) (p : SingleLimited (succ (succ n))) : ExtsLimited (n) := match p with
+  theorem singleToExts (n : Nat) (p : SingleLimited n) : ExtsLimited n := match p with
     | SingleLimited.is02 _ p2 => match p2 with
       | ExtsLimited.is _ _ p3 _ _ _ _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is03 m p2 => match p2 with
@@ -32,8 +31,8 @@ namespace divseq2
       | ExtsLimited.is _ _ _ _ _ _ _ _ p3 _ _ _ _ _ => have p4 := Eq.subst (h₀₇ l) p3; p4
     | SingleLimited.is08 l p2 => match p2 with
       | ExtsLimited.is _ _ _ _ _ _ _ _ _ p3 _ _ _ _ => have p4 := Eq.subst (h₀₈ l) p3; p4
-    | SingleLimited.is09 j p2 => match p2 with
-      | ExtsLimited.is _ _ _ p3 _ _ _ _ _ _ _ _ _ _ => have p4 := Eq.subst (h₀₉ j) p3; p4
+    | SingleLimited.is09 _ p2 => match p2 with
+      | ExtsLimited.is _ _ _ p3 _ _ _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is11 _ p2 => match p2 with
       | ExtsLimited.is _ _ _ _ p3 _ _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is12 l p2 => match p2 with
@@ -43,85 +42,66 @@ namespace divseq2
     | SingleLimited.is14 l p2 => match p2 with
       | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ _ p3 => have p4 := Eq.subst (h₁₄ l) p3; p4
 
-  axiom   m₀₂₁ (l : Nat) : succ (succ (l + 2 - 2)) < succ (succ (succ (succ (succ (l * 2 * 2) * 3))))
-  axiom   m₀₃₁ (m : Nat) : succ (succ (2 * m + 2 - 2)) < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3))))
-  theorem m₀₃₂ (m : Nat) : 2 * m + 2 - 2 = 2* m := rfl
-  axiom   m₀₄₁ (m : Nat) : succ (succ (4 * m + 1 + 2 - 2)) < succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3))))
-  theorem m₀₄₂ (m : Nat) : 4 * m + 1 + 2 - 2 = 4 * m + 1 := rfl
-  axiom   m₀₅₁ (m : Nat) : succ (succ (8 * m + 7 - 2)) < succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3))))
-  -- theorem m₀₅₂ (m : Nat) : 8 * m + 7 - 2 + 2 = 8 * m + 7 := rfl
-  axiom   m₀₆₁ (l : Nat) : succ (succ (16 * l + 3 - 2)) < succ (succ (succ (succ (l * 3 * 2 * 3))))
-  -- theorem m₀₆₂ (l : Nat) : 16 * l + 3 + 2 - 2 = 16 * l + 3 := rfl
-  axiom   m₀₇₁ (l : Nat) : succ (succ (8 * l + 4 - 2)) < succ (succ (succ (succ (succ (l * 3) * 2 * 3))))
-  -- theorem m₀₇₂ (l : Nat) : 8 * l + 4 - 2 + 2 = 8 * l + 4 := rfl
-  axiom   m₀₈₁ (l : Nat) : succ (succ (4 * l + 3 - 2)) < succ (succ (succ (succ (succ (succ (l * 3)) * 2 * 3))))
-  -- theorem m₀₈₂ (l : Nat) : 4 * l + 3 - 2 + 2 = 4 * l + 3 := rfl
-  axiom   m₀₉₁ (j : Nat) : succ (succ (j - 2)) < succ (succ (j * 3))
-  theorem m₀₉₂ (j : Nat) : j + 2 - 2 = j := rfl
-  axiom   m₁₁₁ (k : Nat) : succ (succ (k + 2 - 2)) < succ (succ (succ (k * 2 * 3)))
-  axiom   m₁₂₁ (l : Nat) : succ (succ (2 * l + 2 - 2)) < succ (succ (succ (succ (l * 3 * 2) * 3)))
-  axiom   m₁₃₁ (l : Nat) : succ (succ (4 * l + 1 + 2 - 2)) < succ (succ (succ (succ (succ (l * 3) * 2) * 3)))
-  theorem m₁₃₂ (l : Nat) : 4 * l + 1 + 2 - 2 = 4 * l + 1 := rfl
-  axiom   m₁₄₁ (l : Nat) : succ (succ (8 * l + 7 + 2 - 2)) < succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3)))
-  theorem m₁₄₂ (l : Nat) : 8 * l + 7 + 2 - 2 = 8 * l + 7 := rfl
+  theorem m₀₂₁ (l : Nat) : l < succ (succ (succ (succ (succ (l * 2 * 2) * 3)))) := by linarith
+  theorem m₀₃₁ (m : Nat) : 2 * m < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3)))) := by linarith
+  theorem m₀₄₁ (m : Nat) : 4 * m + 1 < succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3)))) := by linarith
+  theorem m₀₅₁ (m : Nat) : 8 * m + 7 < succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3)))) := by linarith
+  theorem m₀₆₁ (l : Nat) : 16 * l + 3 < succ (succ (succ (succ (l * 3 * 2 * 3)))) := by linarith
+  theorem m₀₇₁ (l : Nat) : 8 * l + 4 < succ (succ (succ (succ (succ (l * 3) * 2 * 3)))) := by linarith
+  theorem m₀₈₁ (l : Nat) : 4 * l + 3 < succ (succ (succ (succ (succ (succ (l * 3)) * 2 * 3)))) := by linarith
+  theorem m₀₉₁ (j : Nat) : j < succ (succ (j * 3)) := by linarith
+  theorem m₁₁₁ (k : Nat) : k < succ (succ (succ (k * 2 * 3))) := by linarith
+  theorem m₁₂₁ (l : Nat) : 2 * l < succ (succ (succ (succ (l * 3 * 2) * 3))) := by linarith
+  theorem m₁₃₁ (l : Nat) : 4 * l + 1 < succ (succ (succ (succ (succ (l * 3) * 2) * 3))) := by linarith
+  theorem m₁₄₁ (l : Nat) : 8 * l + 7 < succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))) := by linarith
   def makeLimitedDivSeq (x : Nat) (rs : ∀ x₁, x₁ < x → SingleLimited x₁) : SingleLimited x := match x with
-    | 0             => SingleLimited.is10 -- 6*<0>+3 = 3
-    | 1             => SingleLimited.is01 -- 6*<1>+3 = 9
+    | 0             => is10 -- 6*<0>+3 = 3
+    | 1             => is01 -- 6*<1>+3 = 9
     | succ (succ x) => by have rs := rs; cases (mod3 x) with
       -- 6 mod 9
       | threeZero j =>
-          have sin := rs (succ (succ (j - 2))) (m₀₉₁ j); have ext := singleToExts (j - 2) sin; --rw [m₀₉₂ j] at ext;
+          have sin := rs j (m₀₉₁ j); have ext := singleToExts j sin;
           exact SingleLimited.is09 j ext;
       -- 3 mod 9
       | threeOne j  => cases (parity j) with
         | even k =>
-            have sin := rs (succ (succ (k + 2 - 2))) (m₁₁₁ k); have ext := singleToExts (k + 2 - 2) sin; rw [m₀₉₂ k] at ext;
+            have sin := rs k (m₁₁₁ k); have ext := singleToExts k sin;
             exact SingleLimited.is11 k ext;
         | odd k  => cases (mod3 k) with
           | threeZero l =>
-              have sin := rs (succ (succ (2 * l + 2 - 2))) (m₁₂₁ l);
-              have ext := singleToExts (2 * l + 2 - 2) sin; rw [m₀₃₂ l] at ext;
+              have sin := rs (2 * l) (m₁₂₁ l); have ext := singleToExts (2 * l) sin;
               exact SingleLimited.is12 l ext;
           | threeOne l  =>
-              have sin := rs (succ (succ (4 * l + 1 + 2 - 2))) (m₁₃₁ l);
-              have ext := singleToExts (4 * l + 1 + 2 - 2) sin; rw [m₁₃₂ l] at ext;
+              have sin := rs (4 * l + 1) (m₁₃₁ l); have ext := singleToExts (4 * l + 1) sin;
               exact SingleLimited.is13 l ext;
           | threeTwo l  =>
-              have sin := rs (succ (succ (8 * l + 7 + 2 - 2))) (m₁₄₁ l);
-              have ext := singleToExts (8 * l + 7 + 2 - 2) sin; rw [m₁₄₂ l] at ext;
+              have sin := rs (8 * l + 7) (m₁₄₁ l); have ext := singleToExts (8 * l + 7) sin;
               exact SingleLimited.is14 l ext;
       -- 0 mod 9
       | threeTwo j  => cases (parity j) with
         | even k => cases (mod3 k) with
           | threeZero l =>
-              have sin := rs (succ (succ (16 * l + 3 - 2))) (m₀₆₁ l);
-              have ext := singleToExts (16 * l + 3 - 2) sin; --rw [m₀₆₂ l] at ext;
+              have sin := rs (16 * l + 3) (m₀₆₁ l); have ext := singleToExts (16 * l + 3) sin;
               exact SingleLimited.is06 l ext;
           | threeOne l  =>
-              have sin := rs (succ (succ (8 * l + 4 - 2))) (m₀₇₁ l);
-              have ext := singleToExts (8 * l + 4 - 2) sin; --rw [m₀₇₂ l] at ext;
+              have sin := rs (8 * l + 4) (m₀₇₁ l); have ext := singleToExts (8 * l + 4) sin;
               exact SingleLimited.is07 l ext;
           | threeTwo l  =>
-              have sin := rs (succ (succ (4 * l + 3 - 2))) (m₀₈₁ l);
-              have ext := singleToExts (4 * l + 3 - 2) sin; --rw [m₀₈₂ l] at ext;
+              have sin := rs (4 * l + 3) (m₀₈₁ l); have ext := singleToExts (4 * l + 3) sin;
               exact SingleLimited.is08 l ext;
         | odd k  => cases (parity k) with
           | even l =>
-              have sin := rs (succ (succ (l + 2 - 2))) (m₀₂₁ l);
-              have ext := singleToExts (l + 2 - 2) sin; rw [m₀₉₂ l] at ext;
+              have sin := rs l (m₀₂₁ l); have ext := singleToExts l sin;
               exact SingleLimited.is02 l ext;
           | odd l  => cases (mod3 l) with
             | threeZero m =>
-                have sin := rs (succ (succ (2 * m + 2 - 2))) (m₀₃₁ m);
-                have ext := singleToExts (2 * m + 2 - 2) sin; rw [m₀₃₂ m] at ext;
+                have sin := rs (2 * m) (m₀₃₁ m); have ext := singleToExts (2 * m) sin;
                 exact SingleLimited.is03 m ext;
             | threeOne m  =>
-                have sin := rs (succ (succ (4 * m + 1 + 2 - 2))) (m₀₄₁ m);
-                have ext := singleToExts (4 * m + 1 + 2 - 2) sin; rw [m₀₄₂ m] at ext;
+                have sin := rs (4 * m + 1) (m₀₄₁ m); have ext := singleToExts (4 * m + 1) sin;
                 exact SingleLimited.is04 m ext;
             | threeTwo m  =>
-                have sin := rs (succ (succ (8 * m + 7 - 2))) (m₀₅₁ m);
-                have ext := singleToExts (8 * m + 7 - 2) sin; --rw [m₀₅₂ m] at ext;
+                have sin := rs (8 * m + 7) (m₀₅₁ m); have ext := singleToExts (8 * m + 7) sin;
                 exact SingleLimited.is05 m ext;
   -- 最終的な定理
   def LimitedDivSeq (n : Nat) : SingleLimited n := WellFounded.fix' (measure id).wf makeLimitedDivSeq n
