@@ -12,6 +12,7 @@ namespace divseq2
   axiom   h₀₆ (l : Nat) : (16 * l + 3 - 2) + (16 * l + 3 - 2 - 1) / 8 + 1 = l * 3 * 2 * 3 + 2
   axiom   h₀₇ (l : Nat) : 8 * l + 4 - 2 + (8 * l + 4 - 2 - 2) / 4 * 5 + 6 = (succ (l * 3)) * 2 * 3 + 2
   axiom   h₀₈ (l : Nat) : 4 * (4 * l + 3 - 2) + (4 * l + 3 - 2 - 1) / 2 + 10 = (succ (succ (l * 3))) * 2 * 3 + 2
+  axiom   h₀₉ (j : Nat) : (j - 2) * 3 + 6 = j * 3
   theorem h₁₂ (l : Nat) : 9 * (2 * l) + 4 = (succ (l * 3 * 2)) * 3 + 1 := by linarith
   axiom   h₁₃ (l : Nat) : (9 * (4 * l + 1) + 11) / 2 = (succ (succ (l * 3) * 2)) * 3 + 1
   axiom   h₁₄ (l : Nat) : (9 * (8 * l + 7) + 1) / 4 = (succ ((succ (succ (l * 3))) * 2)) * 3 + 1
@@ -31,8 +32,8 @@ namespace divseq2
       | ExtsLimited.is _ _ _ _ _ _ _ _ p3 _ _ _ _ _ => have p4 := Eq.subst (h₀₇ l) p3; p4
     | SingleLimited.is08 l p2 => match p2 with
       | ExtsLimited.is _ _ _ _ _ _ _ _ _ p3 _ _ _ _ => have p4 := Eq.subst (h₀₈ l) p3; p4
-    | SingleLimited.is09 _ p2 => match p2 with
-      | ExtsLimited.is _ _ _ p3 _ _ _ _ _ _ _ _ _ _ => p3
+    | SingleLimited.is09 j p2 => match p2 with
+      | ExtsLimited.is _ _ _ p3 _ _ _ _ _ _ _ _ _ _ => have p4 := Eq.subst (h₀₉ j) p3; p4
     | SingleLimited.is11 _ p2 => match p2 with
       | ExtsLimited.is _ _ _ _ p3 _ _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is12 l p2 => match p2 with
@@ -55,7 +56,7 @@ namespace divseq2
   -- theorem m₀₇₂ (l : Nat) : 8 * l + 4 - 2 + 2 = 8 * l + 4 := rfl
   axiom   m₀₈₁ (l : Nat) : succ (succ (4 * l + 3 - 2)) < succ (succ (succ (succ (succ (succ (l * 3)) * 2 * 3))))
   -- theorem m₀₈₂ (l : Nat) : 4 * l + 3 - 2 + 2 = 4 * l + 3 := rfl
-  axiom   m₀₉₁ (j : Nat) : succ (succ (j + 2 - 2)) < succ (succ (j * 3))
+  axiom   m₀₉₁ (j : Nat) : succ (succ (j - 2)) < succ (succ (j * 3))
   theorem m₀₉₂ (j : Nat) : j + 2 - 2 = j := rfl
   axiom   m₁₁₁ (k : Nat) : succ (succ (k + 2 - 2)) < succ (succ (succ (k * 2 * 3)))
   axiom   m₁₂₁ (l : Nat) : succ (succ (2 * l + 2 - 2)) < succ (succ (succ (succ (l * 3 * 2) * 3)))
@@ -69,7 +70,7 @@ namespace divseq2
     | succ (succ x) => by have rs := rs; cases (mod3 x) with
       -- 6 mod 9
       | threeZero j =>
-          have sin := rs (succ (succ (j + 2 - 2))) (m₀₉₁ j); have ext := singleToExts (j + 2 - 2) sin; rw [m₀₉₂ j] at ext;
+          have sin := rs (succ (succ (j - 2))) (m₀₉₁ j); have ext := singleToExts (j - 2) sin; --rw [m₀₉₂ j] at ext;
           exact SingleLimited.is09 j ext;
       -- 3 mod 9
       | threeOne j  => cases (parity j) with

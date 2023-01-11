@@ -32,7 +32,7 @@ inductive ExtsLimited : Nat → Prop where
   | is : (l : Nat)
       → (ExtsLimited <| l) -- この条件があるから、この後どんな条件を置いても良い
       → (ExtsLimited <| (succ (l * 2 * 2)) * 3 + 2) -- 02
-      → (ExtsLimited <| l*3)                        -- 09
+      → (ExtsLimited <| l*3+6)                      -- 09'
       → (ExtsLimited <| l * 2 * 3 + 1)              -- 11
       → (ExtsLimited <| 18*l+11)                    -- 03'
       → (ExtsLimited <| 9*l+4)                      -- 12'
@@ -54,7 +54,7 @@ inductive SingleLimited : Nat → Prop where
   | is06 : (l : Nat) → (ExtsLimited <| 16*l+3-2) → (SingleLimited <| succ (succ (succ (succ (l * 3 * 2 * 3))))) -- !
   | is07 : (l : Nat) → (ExtsLimited <| 8*l+4-2) → (SingleLimited <| succ (succ (succ (succ (((succ (l * 3)) * 2) * 3))))) -- !
   | is08 : (l : Nat) → (ExtsLimited <| 4*l+3-2) → (SingleLimited <| succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3))))) -- !
-  | is09 : (j : Nat) → (ExtsLimited <| j) → (SingleLimited <| succ (succ (j*3)))
+  | is09 : (j : Nat) → (ExtsLimited <| j-2) → (SingleLimited <| succ (succ (j*3))) -- !
   | is10 : SingleLimited 0
   | is11 : (k : Nat) → (ExtsLimited <| k) → (SingleLimited <| succ (succ (succ (k * 2 * 3))))
   | is12 : (l : Nat) → (ExtsLimited <| 2*l) → (SingleLimited <| succ (succ (succ ((succ (l * 3 * 2)) * 3))))
