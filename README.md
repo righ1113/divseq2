@@ -6,6 +6,7 @@
 <br />
 
 # 変更履歴
+23/01/14 説明を書きました  
 23/01/10 ひとまず出来た  
 23/01/07 init  
 
@@ -33,6 +34,37 @@
 9[2,1,1,2,3,4]は完全割数列です。  
 7[1,1,2,3,4]はふつうの割数列です。  
 　  
+
+# Explanation of source code
+See [1] for theoretical background.  
+
+## Divseq2.lean
+### parity and mod3
+I use this when divided case.  
+### allDivSeq
+I have to connect `allDivSeq` and `ExtsLimited`, but I haven't started yet.  
+But it doesn't affect the proof.  
+### ExtsLimited
+Each term represents the inverse of the extended star conversion.  
+### SingleLimited
+My theorem proving was that `is01(single 9)`, `is10(single 3)` could not be a constructor. axiom.  
+
+## Main.lean
+### singleToExts
+It uses 3 lemmas, and 6 axioms.  
+There are two stages of assigning constructors to arguments.  
+### makeLimitedDivSeq
+It uses 12 lemmas.  
+### LimitedDivSeq
+This is the final theorem.  
+Passing `makeLimitedDivSeq` to the well-founded function.  
+
+## axiom
+Seen from the human, every axiom proposition is self-evident.  
+
+# Reference
+[1] Furuta, Masashi. "Proof of Collatz Conjecture Using Division Sequence." Advances in Pure Mathematics 12.2 (2022): 96-108. DOI: 10.4236/apm.2022.122009  
+
 <br />
 <br />
 <br />

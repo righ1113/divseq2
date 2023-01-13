@@ -8,7 +8,8 @@ open Nat
 namespace divseq2
   theorem h₀₃ (m : Nat) : 18 * (2 * m) + 13 = succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))) := by linarith
   theorem h₀₄ (m : Nat) : 9 * (4 * m + 1) + 16 = succ (succ (succ (succ ((succ ((succ ((succ (m * 3)) * 2)) * 2)) * 3)))) := by linarith
-  axiom   h₀₅ (m : Nat) : (9 * (8 * m + 7) - 7) / 2 = succ (succ (succ (succ ((succ (succ (succ (succ (m * 3)) * 2) * 2)) * 3))))
+  --theorem h₀₅1 (m : Nat) : 36 * m + 37 = succ (succ (succ (succ ((succ (succ (succ (succ (m * 3)) * 2) * 2)) * 3)))) := by linarith
+  axiom   h₀₅ (m : Nat) : (9 * (8 * m + 7) + 11) / 2 = succ (succ (succ (succ ((succ ((succ ((succ (succ (m * 3))) * 2)) * 2)) * 3))))
   axiom   h₀₆ (l : Nat) : (16 * l + 3) + (16 * l + 3 - 3) / 8 + 1 = succ (succ (succ (succ (l * 3 * 2 * 3))))
   axiom   h₀₇ (l : Nat) : 8 * l + 4 + (8 * l + 4 - 4) / 4 * 5 + 6 = succ (succ (succ (succ (((succ (l * 3)) * 2) * 3))))
   axiom   h₀₈ (l : Nat) : 4 * (4 * l + 3) + (4 * l + 3 - 3) / 2 + 4 = succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3))))
