@@ -47,7 +47,7 @@ But it doesn't affect the proof.
 ### ExtsLimited
 Each term represents the inverse of the extended star conversion.  
 ### SingleLimited
-My theorem proving was that `is01(single 9)`, `is10(single 3)` could not be a constructor. axiom.  
+My theorem proving was that `is01(single 9)`, `is10(single 3)` could not be a constructor. `axiom`.  
 
 ## Main.lean
 ### singleToExts
