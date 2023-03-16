@@ -53,6 +53,7 @@ My theorem proving was that `is01(single 9)`, `is10(single 3)` could not be a co
 
 ## Main.lean
 ### singleToExts
+Sufficient condition.  
 It uses 3 lemmas, and 6 axioms.  
 There are two stages of assigning constructors to arguments.  
 ### makeLimitedDivSeq
