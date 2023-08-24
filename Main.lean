@@ -42,6 +42,10 @@ namespace divseq2
       | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ p3 _ => have p4 := Eq.subst (h₁₃ l) p3; p4
     | SingleLimited.is14 l p2 => match p2 with
       | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ _ p3 => have p4 := Eq.subst (h₁₄ l) p3; p4
+    | SingleLimited.is01_2 p2 => match p2 with
+      | ExtsLimited.is _ p3 _ _ _ _ _ _ _ _ _ _ _ _ => p3
+    | SingleLimited.is10_2 p2 => match p2 with
+      | ExtsLimited.is _ p3 _ _ _ _ _ _ _ _ _ _ _ _ => p3
 
   theorem m₀₂₁ (l : Nat) : l < succ (succ (succ (succ (succ (l * 2 * 2) * 3)))) := by linarith
   theorem m₀₃₁ (m : Nat) : 2 * m < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3)))) := by linarith

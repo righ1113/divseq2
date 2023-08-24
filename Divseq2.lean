@@ -58,6 +58,8 @@ inductive SingleLimited : Nat → Prop where
   | is12 : (l : Nat) → (ExtsLimited <| 2*l) → (SingleLimited <| succ (succ (succ ((succ (l * 3 * 2)) * 3))))
   | is13 : (l : Nat) → (ExtsLimited <| 4*l+1) → (SingleLimited <| succ (succ (succ (succ (succ (l * 3) * 2) * 3))))
   | is14 : (l : Nat) → (ExtsLimited <| 8*l+7) → (SingleLimited <| succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))))
+  | is01_2 : ExtsLimited 1 → SingleLimited 1
+  | is10_2 : ExtsLimited 0 → SingleLimited 0
 axiom is01 : SingleLimited 1
 axiom is10 : SingleLimited 0
 
