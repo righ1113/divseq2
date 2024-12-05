@@ -7,6 +7,7 @@
 <br />
 
 # 変更履歴
+24/12/06 Lean 4 4.15.0-rc1 に更新  
 23/03/03 完成しました  
 23/01/14 説明を書きました  
 23/01/10 ひとまず出来た  
@@ -40,7 +41,7 @@
 # Explanation of source code
 See [1] for theoretical background.  
 
-## Divseq2.lean
+## Divseq2/Lean/Basic.lean
 ### parity and mod3
 I use this when divided case.  
 ### allDivSeq
@@ -51,11 +52,12 @@ Each term represents the inverse of the extended star conversion.
 ### SingleLimited
 My theorem proving was that `is01(single 9)`, `is10(single 3)` could not be a constructor. `axiom`.  
 
-## Main.lean
+## Divseq2/Lean.lean
 ### singleToExts
 Sufficient condition.  
 It uses 3 lemmas, and 6 axioms.  
 There are two stages of assigning constructors to arguments.  
+[241206] I recently proved 6 axioms.  
 ### makeLimitedDivSeq
 It uses 12 lemmas.  
 ### LimitedDivSeq

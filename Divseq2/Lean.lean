@@ -1,51 +1,65 @@
--- $ cd divseq2
--- $ code .
-
-import «Divseq2»
+-- This module serves as the root of the `Divseq2.Lean` library.
+-- Import modules here that should be built as part of the library.
+import Divseq2.Lean.Basic
 
 open Nat
 
 namespace divseq2
   theorem h₀₃ (m : Nat) : 18 * (2 * m) + 13 = succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))) := by linarith
   theorem h₀₄ (m : Nat) : 9 * (4 * m + 1) + 16 = succ (succ (succ (succ ((succ ((succ ((succ (m * 3)) * 2)) * 2)) * 3)))) := by linarith
-  --theorem h₀₅1 (m : Nat) : 36 * m + 37 = succ (succ (succ (succ ((succ ((succ ((succ (succ (m * 3))) * 2)) * 2)) * 3)))) := by linarith
-  axiom   h₀₅ (m : Nat) : (9 * (8 * m + 7) + 11) / 2 = succ (succ (succ (succ ((succ ((succ ((succ (succ (m * 3))) * 2)) * 2)) * 3))))
-  axiom   h₀₆ (l : Nat) : (16 * l + 3) + (16 * l + 3 - 3) / 8 + 1 = succ (succ (succ (succ (l * 3 * 2 * 3))))
-  axiom   h₀₇ (l : Nat) : 8 * l + 4 + (8 * l + 4 - 4) / 4 * 5 + 6 = succ (succ (succ (succ (((succ (l * 3)) * 2) * 3))))
-  axiom   h₀₈ (l : Nat) : 4 * (4 * l + 3) + (4 * l + 3 - 3) / 2 + 4 = succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3))))
+  theorem h₀₅ (m : Nat) : (9 * (8 * m + 7) + 11) / 2 = succ (succ (succ (succ ((succ ((succ ((succ (succ (m * 3))) * 2)) * 2)) * 3)))) :=
+    by simp_arith
+       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
+  theorem h₀₆ (l : Nat) : (16 * l + 3) + (16 * l + 3 - 3) / 8 + 1 = succ (succ (succ (succ (l * 3 * 2 * 3)))) :=
+    by simp_arith
+       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
+  theorem h₀₇ (l : Nat) : 8 * l + 4 + (8 * l + 4 - 4) / 4 * 5 + 6 = succ (succ (succ (succ (((succ (l * 3)) * 2) * 3)))) :=
+    by simp_arith
+       have p1 : 10 = 5 * 2 := rfl
+       have p2 (c : Nat) : 5 * 2 * c = 5 * (2 * c) := by linarith
+       have p3 (b c : Nat) : b = c -> 5 * b = 5 * c := by simp
+       rw [p1]
+       rw [p2]
+       apply (p3 (8 * l / 4) (2 * l))
+       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
+  theorem h₀₈ (l : Nat) : 4 * (4 * l + 3) + (4 * l + 3 - 3) / 2 + 4 = succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3)))) :=
+    by simp_arith
+       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
   theorem h₁₂ (l : Nat) : 9 * (2 * l) + 6 = succ (succ (succ ((succ (l * 3 * 2)) * 3))) := by linarith
-  axiom   h₁₃ (l : Nat) : (9 * (4 * l + 1) + 15) / 2 = succ (succ (succ ((succ ((succ (l * 3)) * 2)) * 3)))
-  axiom   h₁₄ (l : Nat) : (9 * (8 * l + 7) + 9) / 4 = succ (succ (succ ((succ ((succ (succ (l * 3))) * 2)) * 3)))
+  theorem h₁₃ (l : Nat) : (9 * (4 * l + 1) + 15) / 2 = succ (succ (succ ((succ ((succ (l * 3)) * 2)) * 3))) :=
+    by simp_arith
+       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
+  theorem h₁₄ (l : Nat) : (9 * (8 * l + 7) + 9) / 4 = succ (succ (succ ((succ ((succ (succ (l * 3))) * 2)) * 3))) :=
+    by simp_arith
+       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
   -- 十分条件
   theorem singleToExts (n : Nat) (p : SingleLimited n) : ExtsLimited n := match p with
     | SingleLimited.is02 _ p2 => match p2 with
       | ExtsLimited.is _ _ p3 _ _ _ _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is03 m p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ p3 _ _ _ _ _ _ _ _ => have p4 := Eq.subst (h₀₃ m) p3; p4
+      | ExtsLimited.is _ _ _ _ _ p3 _ _ _ _ _ _ _ _ => Eq.subst (h₀₃ m) p3
     | SingleLimited.is04 m p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ p3 _ _ _ => have p4 := Eq.subst (h₀₄ m) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ p3 _ _ _ => Eq.subst (h₀₄ m) p3
     | SingleLimited.is05 m p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ p3 _ _ => have p4 := Eq.subst (h₀₅ m) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ p3 _ _ => Eq.subst (h₀₅ m) p3
     | SingleLimited.is06 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ p3 _ _ _ _ _ _ => have p4 := Eq.subst (h₀₆ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ p3 _ _ _ _ _ _ => Eq.subst (h₀₆ l) p3
     | SingleLimited.is07 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ p3 _ _ _ _ _ => have p4 := Eq.subst (h₀₇ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ _ p3 _ _ _ _ _ => Eq.subst (h₀₇ l) p3
     | SingleLimited.is08 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ p3 _ _ _ _ => have p4 := Eq.subst (h₀₈ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ _ _ p3 _ _ _ _ => Eq.subst (h₀₈ l) p3
     | SingleLimited.is09 _ p2 => match p2 with
       | ExtsLimited.is _ _ _ p3 _ _ _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is11 _ p2 => match p2 with
       | ExtsLimited.is _ _ _ _ p3 _ _ _ _ _ _ _ _ _ => p3
     | SingleLimited.is12 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ p3 _ _ _ _ _ _ _ => have p4 := Eq.subst (h₁₂ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ p3 _ _ _ _ _ _ _ => Eq.subst (h₁₂ l) p3
     | SingleLimited.is13 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ p3 _ => have p4 := Eq.subst (h₁₃ l) p3; p4
+      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ p3 _ => Eq.subst (h₁₃ l) p3
     | SingleLimited.is14 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ _ p3 => have p4 := Eq.subst (h₁₄ l) p3; p4
-    | SingleLimited.is01_2 p2 => match p2 with
-      | ExtsLimited.is _ p3 _ _ _ _ _ _ _ _ _ _ _ _ => p3
-    | SingleLimited.is10_2 p2 => match p2 with
-      | ExtsLimited.is _ p3 _ _ _ _ _ _ _ _ _ _ _ _ => p3
+      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ _ p3 => Eq.subst (h₁₄ l) p3
+    | SingleLimited.is01_2 p2 => p2
+    | SingleLimited.is10_2 p2 => p2
 
   theorem m₀₂₁ (l : Nat) : l < succ (succ (succ (succ (succ (l * 2 * 2) * 3)))) := by linarith
   theorem m₀₃₁ (m : Nat) : 2 * m < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3)))) := by linarith
@@ -109,13 +123,5 @@ namespace divseq2
                 have sin := rs (8 * m + 7) (m₀₅₁ m); have ext := singleToExts (8 * m + 7) sin;
                 exact SingleLimited.is05 m ext;
   -- 最終的な定理
-  def LimitedDivSeq (n : Nat) : SingleLimited n := WellFounded.fix' (measure id).wf makeLimitedDivSeq n
+  def LimitedDivSeq (n : Nat) : SingleLimited n := WellFounded.fix (measure id).wf makeLimitedDivSeq n
 end divseq2
-
-
-
-def main : IO Unit :=
-  IO.println s!"Hello,"
-
-
-
