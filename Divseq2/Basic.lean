@@ -2,6 +2,8 @@ import Mathlib.Tactic.Linarith
 
 #eval Lean.versionString
 
+set_option linter.unusedVariables false
+
 open Nat
 
 theorem p₁ (k : Nat) : (succ k) * 2 = succ (succ (k * 2))        := succ_mul_succ_eq k 1
