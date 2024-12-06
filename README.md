@@ -41,7 +41,7 @@
 # Explanation of source code
 See [1] for theoretical background.  
 
-## Divseq2/Lean/Basic.lean
+## Divseq2/Basic.lean
 ### parity and mod3
 I use this when divided case.  
 ### allDivSeq
@@ -52,7 +52,7 @@ Each term represents the inverse of the extended star conversion.
 ### SingleLimited
 My theorem proving was that `is01(single 9)`, `is10(single 3)` could not be a constructor. `axiom`.  
 
-## Divseq2/Lean.lean
+## Divseq2.lean
 ### singleToExts
 Sufficient condition.  
 It uses 3 lemmas, and 6 axioms.  

@@ -1,6 +1,6 @@
 -- This module serves as the root of the `Divseq2.Lean` library.
 -- Import modules here that should be built as part of the library.
-import Divseq2.Lean.Basic
+import Divseq2.Basic
 
 open Nat
 
