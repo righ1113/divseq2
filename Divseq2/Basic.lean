@@ -6,8 +6,8 @@ set_option linter.unusedVariables false
 
 open Nat
 
-theorem p₁ (k : Nat) : (succ k) * 2 = succ (succ (k * 2))        := succ_mul_succ_eq k 1
-theorem m₁ (k : Nat) : (succ k) * 3 = succ (succ (succ (k * 3))) := succ_mul_succ_eq k 2
+lemma p₁ (k : Nat) : (succ k) * 2 = succ (succ (k * 2))        := succ_mul_succ_eq k 1
+lemma m₁ (k : Nat) : (succ k) * 3 = succ (succ (succ (k * 3))) := succ_mul_succ_eq k 2
 inductive Parity : Nat → Prop where
   | even : (k : Nat) → Parity (k * 2)
   | odd  : (k : Nat) → Parity (succ (k * 2))
