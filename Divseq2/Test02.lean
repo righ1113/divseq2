@@ -25,9 +25,10 @@ def mod3 (n : Nat) : Mod3 n := match n with
 
 inductive ExtsLimited2 : Nat → Prop where
   | is : (k : Nat)
-      → (ExtsLimited2 <| succ (succ (k*2)))              -- 09
-      → (ExtsLimited2 <| succ (k*2))                     -- 11
-      → (ExtsLimited2 <| 0)                              -- 14'
+      → (ExtsLimited2 <| k) -- この条件があるから、この後どんな条件を置いても良い
+      → (ExtsLimited2 <| succ (succ (k*2)))           -- 09
+      → (ExtsLimited2 <| succ (k*2))                  -- 11
+      → (ExtsLimited2 0)                              -- 14'
         → (ExtsLimited2 <| k)
 inductive SingleLimited2 : Nat → Prop where
   | is09 : (k : Nat) → (ExtsLimited2 <| k)      → (SingleLimited2 <| succ (succ (k*2)))
@@ -38,10 +39,10 @@ axiom is10 : SingleLimited2 0
 -- 十分条件
 theorem singleToExts2 (n : Nat) (p : SingleLimited2 n) : ExtsLimited2 n := match p with
   | SingleLimited2.is09 _ p2 => match p2 with
-    | ExtsLimited2.is _ p3 _ _  => p3
+    | ExtsLimited2.is _ _ p3 _ _  => p3
   | SingleLimited2.is11 _ p2 => match p2 with
-    | ExtsLimited2.is _ _ p3 _  => p3
-  | SingleLimited2.is10_2 p2    => p2
+    | ExtsLimited2.is _ _ _ p3 _  => p3
+  | SingleLimited2.is10_2 p2      => p2
 
 theorem makeLimitedDivSeq2 (x : Nat) (rs : ∀ x₁, x₁ < x → SingleLimited2 x₁) : SingleLimited2 x := match x with
   | 0      => is10
