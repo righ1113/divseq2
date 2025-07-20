@@ -30,21 +30,6 @@ def mod3 (n : Nat) : Mod3 n := match n with
 def allDivSeq (x:Nat) : List (List Int) := [[]] -- TBD
 
 inductive ExtsLimited : Nat → Prop where
-  | is : (l : Nat)
-      → (ExtsLimited <| l) -- この条件があるから、この後どんな条件を置いても良い
-      → (ExtsLimited <| succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) -- 02
-      → (ExtsLimited <| succ (succ (l*3)))                                  -- 09
-      → (ExtsLimited <| succ (succ (succ (l * 2 * 3))))                     -- 11
-      → (ExtsLimited <| 18*l+13)                                            -- 03'
-      → (ExtsLimited <| 9*l+6)                                              -- 12'
-      → (ExtsLimited <| l+(l-3)/8+1)                                        -- 06'
-      → (ExtsLimited <| l+(l-4)/4*5+6)                                      -- 07'
-      → (ExtsLimited <| 4*l+(l-3)/2+4)                                      -- 08'
-      → (ExtsLimited <| 9*l+16)                                             -- 04'
-      → (ExtsLimited <| (9*l+11)/2)                                         -- 05'
-      → (ExtsLimited <| (9*l+15)/2)                                         -- 13'
-      → (ExtsLimited <| (9*l+9)/4)                                          -- 14'
-        → (ExtsLimited <| l)
 
 inductive SingleLimited : Nat → Prop where
   | is02 : (l : Nat) → (ExtsLimited <| l)      → (SingleLimited <| succ (succ (succ (succ ((succ (l * 2 * 2)) * 3)))))

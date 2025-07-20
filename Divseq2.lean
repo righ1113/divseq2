@@ -5,59 +5,23 @@ import Divseq2.Basic
 open Nat
 
 namespace divseq2
-  lemma h₀₃ (m : Nat) : 18 * (2 * m) + 13 = succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))) := by linarith
-  lemma h₀₄ (m : Nat) : 9 * (4 * m + 1) + 16 = succ (succ (succ (succ ((succ ((succ ((succ (m * 3)) * 2)) * 2)) * 3)))) := by linarith
-  lemma h₀₅ (m : Nat) : (9 * (8 * m + 7) + 11) / 2 = succ (succ (succ (succ ((succ ((succ ((succ (succ (m * 3))) * 2)) * 2)) * 3)))) :=
-    by simp_arith
-       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
-  lemma h₀₆ (l : Nat) : (16 * l + 3) + (16 * l + 3 - 3) / 8 + 1 = succ (succ (succ (succ (l * 3 * 2 * 3)))) :=
-    by simp_arith
-       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
-  lemma h₀₇ (l : Nat) : 8 * l + 4 + (8 * l + 4 - 4) / 4 * 5 + 6 = succ (succ (succ (succ (((succ (l * 3)) * 2) * 3)))) :=
-    by simp_arith
-       have p1 : 10 = 5 * 2 := rfl
-       have p2 (c : Nat) : 5 * 2 * c = 5 * (2 * c) := by linarith
-       have p3 (b c : Nat) : b = c -> 5 * b = 5 * c := by simp
-       rw [p1]
-       rw [p2]
-       apply (p3 (8 * l / 4) (2 * l))
-       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
-  lemma h₀₈ (l : Nat) : 4 * (4 * l + 3) + (4 * l + 3 - 3) / 2 + 4 = succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3)))) :=
-    by simp_arith
-       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
-  lemma h₁₂ (l : Nat) : 9 * (2 * l) + 6 = succ (succ (succ ((succ (l * 3 * 2)) * 3))) := by linarith
-  lemma h₁₃ (l : Nat) : (9 * (4 * l + 1) + 15) / 2 = succ (succ (succ ((succ ((succ (l * 3)) * 2)) * 3))) :=
-    by simp_arith
-       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
-  lemma h₁₄ (l : Nat) : (9 * (8 * l + 7) + 9) / 4 = succ (succ (succ ((succ ((succ (succ (l * 3))) * 2)) * 3))) :=
-    by simp_arith
-       refine Nat.div_eq_of_eq_mul_right (by simp) (by linarith)
   -- 十分条件
+  -- この条件は「コラッツ値n の完全割数列と拡張完全割数列の(コラッツ操作の果ての)行先が同じ」をあらわす
+  -- この条件には、コラッツ的条件「Single と Extsそれぞれ のコラッツ値が n に等しい」が含まれる
+  -- よって Divseq2/Test02.lean は不正となる
   theorem singleToExts (n : Nat) (p : SingleLimited n) : ExtsLimited n := match p with
-    | SingleLimited.is02 _ p2 => match p2 with
-      | ExtsLimited.is _ _ p3 _ _ _ _ _ _ _ _ _ _ _ => p3
-    | SingleLimited.is03 m p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ p3 _ _ _ _ _ _ _ _ => Eq.subst (h₀₃ m) p3
-    | SingleLimited.is04 m p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ p3 _ _ _ => Eq.subst (h₀₄ m) p3
-    | SingleLimited.is05 m p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ p3 _ _ => Eq.subst (h₀₅ m) p3
-    | SingleLimited.is06 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ p3 _ _ _ _ _ _ => Eq.subst (h₀₆ l) p3
-    | SingleLimited.is07 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ p3 _ _ _ _ _ => Eq.subst (h₀₇ l) p3
-    | SingleLimited.is08 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ p3 _ _ _ _ => Eq.subst (h₀₈ l) p3
-    | SingleLimited.is09 _ p2 => match p2 with
-      | ExtsLimited.is _ _ _ p3 _ _ _ _ _ _ _ _ _ _ => p3
-    | SingleLimited.is11 _ p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ p3 _ _ _ _ _ _ _ _ _ => p3
-    | SingleLimited.is12 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ p3 _ _ _ _ _ _ _ => Eq.subst (h₁₂ l) p3
-    | SingleLimited.is13 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ p3 _ => Eq.subst (h₁₃ l) p3
-    | SingleLimited.is14 l p2 => match p2 with
-      | ExtsLimited.is _ _ _ _ _ _ _ _ _ _ _ _ _ p3 => Eq.subst (h₁₄ l) p3
+    | SingleLimited.is02 _ p2 => by contradiction
+    | SingleLimited.is03 m p2 => by contradiction
+    | SingleLimited.is04 m p2 => by contradiction
+    | SingleLimited.is05 m p2 => by contradiction
+    | SingleLimited.is06 l p2 => by contradiction
+    | SingleLimited.is07 l p2 => by contradiction
+    | SingleLimited.is08 l p2 => by contradiction
+    | SingleLimited.is09 _ p2 => by contradiction
+    | SingleLimited.is11 _ p2 => by contradiction
+    | SingleLimited.is12 l p2 => by contradiction
+    | SingleLimited.is13 l p2 => by contradiction
+    | SingleLimited.is14 l p2 => by contradiction
     | SingleLimited.is01_2 p2 => p2
     | SingleLimited.is10_2 p2 => p2
 
