@@ -7,19 +7,11 @@ set_option linter.unnecessarySeqFocus false
 open Nat
 
 namespace divseq2
-  -- 剰余コラッツ予想より言える
+  -- (変形する分については)剰余コラッツ予想より言える
   axiom SEis (x a b c d : Nat) : ExtsLimited (a * x + b) -> ExtsLimited (c * x + d)
-  lemma SEis02 (l : Nat) (p : ExtsLimited l) :
-    ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
-  have h : ExtsLimited (12 * l + 7) :=
-    SEis l 1 0 12 7 (by simpa using p)
-  convert h using 1 <;> omega
-  -- by induction l with
-  --   | zero   => exact ExtsLimited.is _ 5 (by native_decide)
-  --   | succ q =>
-  --   simp_all only [succ_eq_add_one]
-  --   rename_i a
-  --   sorry
+  lemma SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
+    have h : ExtsLimited (12 * l + 7) := SEis l 1 0 12 7 (by simpa using p)
+    convert h using 1 <;> omega
   axiom SEis03 : (m : Nat) -> (ExtsLimited <| 2*m)    -> (ExtsLimited <| succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))))
   axiom SEis04 : (m : Nat) -> (ExtsLimited <| 4*m+1)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3)))))
   axiom SEis05 : (m : Nat) -> (ExtsLimited <| 8*m+7)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3)))))
