@@ -1,6 +1,7 @@
 import Mathlib.Tactic.Linarith
+import Mathlib.Data.Seq.Seq
 
-#eval Lean.versionString
+-- #eval Lean.versionString
 
 set_option linter.unusedVariables false
 
@@ -27,9 +28,11 @@ def mod3 (n : Nat) : Mod3 n := match n with
     | Mod3.threeOne k  => Mod3.threeTwo k
     | Mod3.threeTwo k  => by rw[←m₁]; exact Mod3.threeZero (succ k)
 
-def allDivSeq (x:Nat) : List (List Int) := [[]] -- TBD
-
+def col (x : Nat) : Nat := if x % 2 = 0 then x / 2 else 3 * x + 1
 inductive ExtsLimited : Nat → Prop where
+  | is : (t u : Nat) -> col^[u + 1] (6 * t + 3) < 6 * t + 3 -> ExtsLimited t
+lemma is01 : ExtsLimited 1 := ExtsLimited.is _ 2 (by native_decide)
+lemma is10 : ExtsLimited 0 := ExtsLimited.is _ 6 (by native_decide)
 
 inductive SingleLimited : Nat → Prop where
   | is02 : (l : Nat) → (ExtsLimited <| l)      → (SingleLimited <| succ (succ (succ (succ ((succ (l * 2 * 2)) * 3)))))
@@ -46,5 +49,3 @@ inductive SingleLimited : Nat → Prop where
   | is14 : (l : Nat) → (ExtsLimited <| 8*l+7)  → (SingleLimited <| succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))))
   | is01_2 : ExtsLimited 1 → SingleLimited 1
   | is10_2 : ExtsLimited 0 → SingleLimited 0
-axiom is01 : SingleLimited 1
-axiom is10 : SingleLimited 0

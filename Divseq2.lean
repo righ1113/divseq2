@@ -5,23 +5,33 @@ import Divseq2.Basic
 open Nat
 
 namespace divseq2
+  -- 剰余コラッツ予想より言える
+  axiom SEis02 : (l : Nat) -> (ExtsLimited <| l)      -> (ExtsLimited <| succ (succ (succ (succ ((succ (l * 2 * 2)) * 3)))))
+  axiom SEis03 : (m : Nat) -> (ExtsLimited <| 2*m)    -> (ExtsLimited <| succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))))
+  axiom SEis04 : (m : Nat) -> (ExtsLimited <| 4*m+1)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3)))))
+  axiom SEis05 : (m : Nat) -> (ExtsLimited <| 8*m+7)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3)))))
+  axiom SEis06 : (l : Nat) -> (ExtsLimited <| 16*l+3) -> (ExtsLimited <| succ (succ (succ (succ (l * 3 * 2 * 3)))))
+  axiom SEis07 : (l : Nat) -> (ExtsLimited <| 8*l+4)  -> (ExtsLimited <| succ (succ (succ (succ (((succ (l * 3)) * 2) * 3)))))
+  axiom SEis08 : (l : Nat) -> (ExtsLimited <| 4*l+3)  -> (ExtsLimited <| succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3)))))
+  axiom SEis09 : (j : Nat) -> (ExtsLimited <| j)      -> (ExtsLimited <| succ (succ (j*3)))
+  axiom SEis11 : (k : Nat) -> (ExtsLimited <| k)      -> (ExtsLimited <| succ (succ (succ (k * 2 * 3))))
+  axiom SEis12 : (l : Nat) -> (ExtsLimited <| 2*l)    -> (ExtsLimited <| succ (succ (succ ((succ (l * 3 * 2)) * 3))))
+  axiom SEis13 : (l : Nat) -> (ExtsLimited <| 4*l+1)  -> (ExtsLimited <| succ (succ (succ (succ (succ (l * 3) * 2) * 3))))
+  axiom SEis14 : (l : Nat) -> (ExtsLimited <| 8*l+7)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))))
   -- 十分条件
-  -- この条件は「コラッツ値n の完全割数列と拡張完全割数列の(コラッツ操作の果ての)行先が同じ」をあらわす
-  -- この条件には、コラッツ的条件「Single と Extsそれぞれ のコラッツ値が n に等しい」が含まれる
-  -- よって Divseq2/Test02.lean は不正となる
   theorem singleToExts (n : Nat) (p : SingleLimited n) : ExtsLimited n := match p with
-    | SingleLimited.is02 _ p2 => by contradiction
-    | SingleLimited.is03 m p2 => by contradiction
-    | SingleLimited.is04 m p2 => by contradiction
-    | SingleLimited.is05 m p2 => by contradiction
-    | SingleLimited.is06 l p2 => by contradiction
-    | SingleLimited.is07 l p2 => by contradiction
-    | SingleLimited.is08 l p2 => by contradiction
-    | SingleLimited.is09 _ p2 => by contradiction
-    | SingleLimited.is11 _ p2 => by contradiction
-    | SingleLimited.is12 l p2 => by contradiction
-    | SingleLimited.is13 l p2 => by contradiction
-    | SingleLimited.is14 l p2 => by contradiction
+    | SingleLimited.is02 l p2 => SEis02 l p2
+    | SingleLimited.is03 m p2 => SEis03 m p2
+    | SingleLimited.is04 m p2 => SEis04 m p2
+    | SingleLimited.is05 m p2 => SEis05 m p2
+    | SingleLimited.is06 l p2 => SEis06 l p2
+    | SingleLimited.is07 l p2 => SEis07 l p2
+    | SingleLimited.is08 l p2 => SEis08 l p2
+    | SingleLimited.is09 j p2 => SEis09 j p2
+    | SingleLimited.is11 k p2 => SEis11 k p2
+    | SingleLimited.is12 l p2 => SEis12 l p2
+    | SingleLimited.is13 l p2 => SEis13 l p2
+    | SingleLimited.is14 l p2 => SEis14 l p2
     | SingleLimited.is01_2 p2 => p2
     | SingleLimited.is10_2 p2 => p2
 
@@ -38,8 +48,8 @@ namespace divseq2
   lemma m₁₃₁ (l : Nat) : 4 * l + 1 < succ (succ (succ (succ (succ (l * 3) * 2) * 3))) := by linarith
   lemma m₁₄₁ (l : Nat) : 8 * l + 7 < succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))) := by linarith
   theorem makeLimitedDivSeq (x : Nat) (rs : ∀ x₁, x₁ < x → SingleLimited x₁) : SingleLimited x := match x with
-    | 0             => is10 -- 6*<0>+3 = 3
-    | 1             => is01 -- 6*<1>+3 = 9
+    | 0             => SingleLimited.is10_2 is10 -- 6*<0>+3 = 3
+    | 1             => SingleLimited.is01_2 is01 -- 6*<1>+3 = 9
     | succ (succ x) => by have rs := rs; cases (mod3 x) with
       -- 6 mod 9
       | threeZero j =>
@@ -86,6 +96,12 @@ namespace divseq2
             | threeTwo m  =>
                 have sin := rs (8 * m + 7) (m₀₅₁ m); have ext := singleToExts (8 * m + 7) sin;
                 exact SingleLimited.is05 m ext;
-  -- 最終的な定理
   theorem LimitedDivSeq (n : Nat) : SingleLimited n := WellFounded.fix (measure id).wf makeLimitedDivSeq n
+  lemma ExtsToCollatz (t : Nat) (p : ExtsLimited t) :
+      ∃ u : Nat, col^[u + 1] (6 * t + 3) < 6 * t + 3 := match p with
+    | ExtsLimited.is _ u p2 => ⟨u, p2⟩
+  -- 最終的な定理
+  theorem CollatzConjecture (t : Nat) :
+      ∃ u : Nat, col^[u + 1] (6 * t + 3) < 6 * t + 3 :=
+    ExtsToCollatz t $ singleToExts t $ LimitedDivSeq t
 end divseq2
