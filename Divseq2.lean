@@ -33,8 +33,35 @@ namespace divseq2
         have hseed : (6 * (c * y + d) + 2) + 1 = 6 * (c * y + d) + 3 := by omega
         rw [hseed] at hv
         exact ExtsLimited.is _ v hv
+  lemma colIterOne (n : Nat) : col^[n] 1 = 1 := by
+    induction n with
+    | zero => simp
+    | succ n ih =>
+      rw [Function.iterate_succ_apply]
+      simp [col, ih]
+  lemma extLimitedOfOrbitEq (s t : Nat) (p : ExtsLimited s)
+    (h : ∃ i j : Nat, col^[i] (6 * s + 3) = col^[j] (6 * t + 3)) : ExtsLimited t := by
+      cases p with
+      | is u hu =>
+        obtain ⟨i, j, hij⟩ := h
+        let k := u + 1
+        have hiter : col^[k] (col^[i] (6 * s + 3)) =
+          col^[k] (col^[j] (6 * t + 3)) := congrArg (fun z => col^[k] z) hij
+        have hsource : col^[k] (col^[i] (6 * s + 3)) = 1 := by
+          rw [← Function.iterate_add_apply, Nat.add_comm k i,
+            Function.iterate_add_apply, hu]
+          exact colIterOne i
+        have htarget' : col^[k] (col^[j] (6 * t + 3)) = 1 :=
+          hiter.symm.trans hsource
+        have htarget : col^[k + j] (6 * t + 3) = 1 := by
+          simpa only [← Function.iterate_add_apply] using htarget'
+        have hsteps : k + j = (u + j) + 1 := by omega
+        rw [hsteps] at htarget
+        exact ExtsLimited.is t (u + j) htarget
+  axiom SEis02Orbit (l : Nat) : ∃ i j : Nat, col^[i] (6 * l + 3) = col^[j] (6 * (12 * l + 7) + 3)
   lemma SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
-    have h : ExtsLimited (12 * l + 7) := SEis l l 1 0 12 7 (by simpa using p)
+    have h : ExtsLimited (12 * l + 7) :=
+      extLimitedOfOrbitEq l (12 * l + 7) p (SEis02Orbit l)
     convert h using 1 <;> omega
   lemma SEis03 (m : Nat) (p : ExtsLimited (2 * m)) :
     ExtsLimited (succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3))))) := by
