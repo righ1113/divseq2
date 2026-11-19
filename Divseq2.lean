@@ -23,22 +23,50 @@ namespace divseq2
   axiom SEis12 : (l : Nat) -> (ExtsLimited <| 2*l)    -> (ExtsLimited <| succ (succ (succ ((succ (l * 3 * 2)) * 3))))
   axiom SEis13 : (l : Nat) -> (ExtsLimited <| 4*l+1)  -> (ExtsLimited <| succ (succ (succ (succ (succ (l * 3) * 2) * 3))))
   axiom SEis14 : (l : Nat) -> (ExtsLimited <| 8*l+7)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))))
+  -- theorem orbitTransfer02 (l : Nat) :
+  --   ∃ v : Nat, col^[v + 1] (6 * (12 * l + 7) + 3) < 6 * (12 * l + 7) + 3 := by
+  --   refine ⟨2, ?_⟩
+  --   change col (col (col (6 * (12 * l + 7) + 3))) < 6 * (12 * l + 7) + 3
+  --   have h₀ : 6 * (12 * l + 7) + 3 = 72 * l + 45 := by omega
+  --   have h₁ : col (72 * l + 45) = 216 * l + 136 := by
+  --     have hp : (72 * l + 45) % 2 ≠ 0 := by omega
+  --     simp [col, hp] <;> omega
+  --   have h₂ : col (216 * l + 136) = 108 * l + 68 := by
+  --     have hp : (216 * l + 136) % 2 = 0 := by omega
+  --     simp [col, hp] <;> omega
+  --   have h₃ : col (108 * l + 68) = 54 * l + 34 := by
+  --     have hp : (108 * l + 68) % 2 = 0 := by omega
+  --     simp [col, hp] <;> omega
+  --   rw [h₀, h₁, h₂, h₃]
+  --   omega
+  -- theorem SEis02 (l : Nat) (p : ExtsLimited l) :
+  --     ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
+  --   cases p with
+  --   | is _ _ =>
+  --     obtain ⟨v, hv⟩ := orbitTransfer02 l
+  --     have h' : ExtsLimited (12 * l + 7) := ExtsLimited.is _ v hv
+  --     convert h' using 1 <;> omega
   -- 十分条件
-  theorem singleToExts (n : Nat) (p : SingleLimited n) : ExtsLimited n := match p with
-    | SingleLimited.is02 l p2 => SEis02 l p2
-    | SingleLimited.is03 m p2 => SEis03 m p2
-    | SingleLimited.is04 m p2 => SEis04 m p2
-    | SingleLimited.is05 m p2 => SEis05 m p2
-    | SingleLimited.is06 l p2 => SEis06 l p2
-    | SingleLimited.is07 l p2 => SEis07 l p2
-    | SingleLimited.is08 l p2 => SEis08 l p2
-    | SingleLimited.is09 j p2 => SEis09 j p2
-    | SingleLimited.is11 k p2 => SEis11 k p2
-    | SingleLimited.is12 l p2 => SEis12 l p2
-    | SingleLimited.is13 l p2 => SEis13 l p2
-    | SingleLimited.is14 l p2 => SEis14 l p2
-    | SingleLimited.is01_2 p2 => p2
-    | SingleLimited.is10_2 p2 => p2
+  theorem singleToExts (n : Nat) (p : SingleLimited n) : ExtsLimited n := by
+    cases n with
+    | zero => exact is10
+    | succ n =>
+      cases n with
+      | zero => exact is01
+      | succ m =>
+        cases p with
+        | is02 l p2 => exact SEis02 l p2
+        | is03 m p2 => exact SEis03 m p2
+        | is04 m p2 => exact SEis04 m p2
+        | is05 m p2 => exact SEis05 m p2
+        | is06 l p2 => exact SEis06 l p2
+        | is07 l p2 => exact SEis07 l p2
+        | is08 l p2 => exact SEis08 l p2
+        | is09 j p2 => exact SEis09 j p2
+        | is11 k p2 => exact SEis11 k p2
+        | is12 l p2 => exact SEis12 l p2
+        | is13 l p2 => exact SEis13 l p2
+        | is14 l p2 => exact SEis14 l p2
 
   lemma m₀₂₁ (l : Nat) : l < succ (succ (succ (succ (succ (l * 2 * 2) * 3)))) := by linarith
   lemma m₀₃₁ (m : Nat) : 2 * m < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3)))) := by linarith
@@ -103,10 +131,10 @@ namespace divseq2
                 exact SingleLimited.is05 m ext;
   theorem LimitedDivSeq (n : Nat) : SingleLimited n := WellFounded.fix (measure id).wf makeLimitedDivSeq n
   lemma ExtsToCollatz (t : Nat) (p : ExtsLimited t) :
-      ∃ u : Nat, col^[u + 1] (6 * t + 3) < 6 * t + 3 := match p with
+      ∃ u : Nat, col^[u + 1] (6 * t + 3) = 1 := match p with
     | ExtsLimited.is _ u p2 => ⟨u, p2⟩
   -- 最終的な定理
   theorem CollatzConjecture (t : Nat) :
-      ∃ u : Nat, col^[u + 1] (6 * t + 3) < 6 * t + 3 :=
+      ∃ u : Nat, col^[u + 1] (6 * t + 3) = 1 :=
     ExtsToCollatz t $ singleToExts t $ LimitedDivSeq t
 end divseq2

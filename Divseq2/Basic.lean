@@ -28,10 +28,10 @@ def mod3 (n : Nat) : Mod3 n := match n with
     | Mod3.threeOne k  => Mod3.threeTwo k
     | Mod3.threeTwo k  => by rw[←m₁]; exact Mod3.threeZero (succ k)
 
-def col (x : Nat) : Nat := if x % 2 = 0 then x / 2 else 3 * x + 1
-inductive ExtsLimited : Nat → Prop where
-  | is : (t u : Nat) -> col^[u + 1] (6 * t + 3) < 6 * t + 3 -> ExtsLimited t
-lemma is01 : ExtsLimited 1 := ExtsLimited.is _ 2 (by native_decide)
+def col (x : Nat) : Nat := if x = 1 then 1 else if x % 2 = 0 then x / 2 else 3 * x + 1
+inductive ExtsLimited : Nat → Prop where -- コラッツ操作で 1 に到達すれば、完全割数列が有限長
+  | is : (t u : Nat) -> col^[u + 1] (6 * t + 3) = 1 -> ExtsLimited t
+lemma is01 : ExtsLimited 1 := ExtsLimited.is _ 18 (by native_decide)
 lemma is10 : ExtsLimited 0 := ExtsLimited.is _ 6 (by native_decide)
 
 inductive SingleLimited : Nat → Prop where
