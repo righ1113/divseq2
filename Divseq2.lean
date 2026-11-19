@@ -8,65 +8,95 @@ open Nat
 
 namespace divseq2
   -- (変形する分については)剰余コラッツ予想より言える
-  axiom SEis (x a b c d : Nat) : ExtsLimited (a * x + b) -> ExtsLimited (c * x + d)
+  axiom Residue1 (t s : Nat) :
+    (∃u : Nat, col^[u + 1] (6 * t + 3) = 1) -> ∃v : Nat, col^[v + 1] (s + 1) = 1
+  lemma SEis (x y a b c d : Nat) :
+    ExtsLimited (a * x + b) -> ExtsLimited (c * y + d) := by
+      intro h
+      cases h with
+      | is u hu =>
+        have htarget :=
+          Residue1 (a * x + b) (6 * (c * y + d) + 2) ⟨u, hu⟩
+        obtain ⟨v, hv⟩ := htarget
+        have hseed : (6 * (c * y + d) + 2) + 1 = 6 * (c * y + d) + 3 := by omega
+        rw [hseed] at hv
+        exact ExtsLimited.is _ v hv
   lemma SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
-    have h : ExtsLimited (12 * l + 7) := SEis l 1 0 12 7 (by simpa using p)
+    have h : ExtsLimited (12 * l + 7) := SEis l l 1 0 12 7 (by simpa using p)
     convert h using 1 <;> omega
-  axiom SEis03 : (m : Nat) -> (ExtsLimited <| 2*m)    -> (ExtsLimited <| succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))))
-  axiom SEis04 : (m : Nat) -> (ExtsLimited <| 4*m+1)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3)))))
-  axiom SEis05 : (m : Nat) -> (ExtsLimited <| 8*m+7)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3)))))
-  axiom SEis06 : (l : Nat) -> (ExtsLimited <| 16*l+3) -> (ExtsLimited <| succ (succ (succ (succ (l * 3 * 2 * 3)))))
-  axiom SEis07 : (l : Nat) -> (ExtsLimited <| 8*l+4)  -> (ExtsLimited <| succ (succ (succ (succ (((succ (l * 3)) * 2) * 3)))))
-  axiom SEis08 : (l : Nat) -> (ExtsLimited <| 4*l+3)  -> (ExtsLimited <| succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3)))))
-  axiom SEis09 : (j : Nat) -> (ExtsLimited <| j)      -> (ExtsLimited <| succ (succ (j*3)))
-  axiom SEis11 : (k : Nat) -> (ExtsLimited <| k)      -> (ExtsLimited <| succ (succ (succ (k * 2 * 3))))
-  axiom SEis12 : (l : Nat) -> (ExtsLimited <| 2*l)    -> (ExtsLimited <| succ (succ (succ ((succ (l * 3 * 2)) * 3))))
-  axiom SEis13 : (l : Nat) -> (ExtsLimited <| 4*l+1)  -> (ExtsLimited <| succ (succ (succ (succ (succ (l * 3) * 2) * 3))))
-  axiom SEis14 : (l : Nat) -> (ExtsLimited <| 8*l+7)  -> (ExtsLimited <| succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))))
-  -- theorem orbitTransfer02 (l : Nat) :
-  --   ∃ v : Nat, col^[v + 1] (6 * (12 * l + 7) + 3) < 6 * (12 * l + 7) + 3 := by
-  --   refine ⟨2, ?_⟩
-  --   change col (col (col (6 * (12 * l + 7) + 3))) < 6 * (12 * l + 7) + 3
-  --   have h₀ : 6 * (12 * l + 7) + 3 = 72 * l + 45 := by omega
-  --   have h₁ : col (72 * l + 45) = 216 * l + 136 := by
-  --     have hp : (72 * l + 45) % 2 ≠ 0 := by omega
-  --     simp [col, hp] <;> omega
-  --   have h₂ : col (216 * l + 136) = 108 * l + 68 := by
-  --     have hp : (216 * l + 136) % 2 = 0 := by omega
-  --     simp [col, hp] <;> omega
-  --   have h₃ : col (108 * l + 68) = 54 * l + 34 := by
-  --     have hp : (108 * l + 68) % 2 = 0 := by omega
-  --     simp [col, hp] <;> omega
-  --   rw [h₀, h₁, h₂, h₃]
-  --   omega
-  -- theorem SEis02 (l : Nat) (p : ExtsLimited l) :
-  --     ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
-  --   cases p with
-  --   | is _ _ =>
-  --     obtain ⟨v, hv⟩ := orbitTransfer02 l
-  --     have h' : ExtsLimited (12 * l + 7) := ExtsLimited.is _ v hv
-  --     convert h' using 1 <;> omega
+  lemma SEis03 (m : Nat) (p : ExtsLimited (2 * m)) :
+    ExtsLimited (succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3))))) := by
+      simpa using
+        (SEis (2 * m)
+          (succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))))
+          1 0 1 0 (by simpa using p))
+  lemma SEis04 (m : Nat) (p : ExtsLimited (4 * m + 1)) :
+    ExtsLimited (succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3))))) := by
+      simpa using
+        (SEis (4 * m + 1)
+          (succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3)))))
+          1 0 1 0 (by simpa using p))
+  lemma SEis05 (m : Nat) (p : ExtsLimited (8 * m + 7)) :
+    ExtsLimited (succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3))))) := by
+      simpa using
+        (SEis (8 * m + 7)
+          (succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3)))))
+          1 0 1 0 (by simpa using p))
+  lemma SEis06 (l : Nat) (p : ExtsLimited (16 * l + 3)) :
+    ExtsLimited (succ (succ (succ (succ (l * 3 * 2 * 3))))) := by
+      simpa using
+        (SEis (16 * l + 3) (succ (succ (succ (succ (l * 3 * 2 * 3)))))
+          1 0 1 0 (by simpa using p))
+  lemma SEis07 (l : Nat) (p : ExtsLimited (8 * l + 4)) :
+    ExtsLimited (succ (succ (succ (succ (((succ (l * 3)) * 2) * 3))))) := by
+      simpa using
+        (SEis (8 * l + 4)
+          (succ (succ (succ (succ (((succ (l * 3)) * 2) * 3)))))
+          1 0 1 0 (by simpa using p))
+  lemma SEis08 (l : Nat) (p : ExtsLimited (4 * l + 3)) :
+    ExtsLimited (succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3))))) := by
+      simpa using
+        (SEis (4 * l + 3)
+          (succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3)))))
+          1 0 1 0 (by simpa using p))
+  lemma SEis09 (j : Nat) (p : ExtsLimited j) :
+    ExtsLimited (succ (succ (j * 3))) := by
+      simpa using (SEis j (succ (succ (j * 3))) 1 0 1 0 (by simpa using p))
+  lemma SEis11 (k : Nat) (p : ExtsLimited k) :
+    ExtsLimited (succ (succ (succ (k * 2 * 3)))) := by
+      simpa using (SEis k (succ (succ (succ (k * 2 * 3)))) 1 0 1 0 (by simpa using p))
+  lemma SEis12 (l : Nat) (p : ExtsLimited (2 * l)) :
+    ExtsLimited (succ (succ (succ ((succ (l * 3 * 2)) * 3)))) := by
+      simpa using
+        (SEis (2 * l) (succ (succ (succ ((succ (l * 3 * 2)) * 3))))
+          1 0 1 0 (by simpa using p))
+  lemma SEis13 (l : Nat) (p : ExtsLimited (4 * l + 1)) :
+    ExtsLimited (succ (succ (succ (succ (succ (l * 3) * 2) * 3)))) := by
+      simpa using
+        (SEis (4 * l + 1) (succ (succ (succ (succ (succ (l * 3) * 2) * 3))))
+          1 0 1 0 (by simpa using p))
+  lemma SEis14 (l : Nat) (p : ExtsLimited (8 * l + 7)) :
+    ExtsLimited (succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3)))) := by
+      simpa using
+        (SEis (8 * l + 7) (succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))))
+          1 0 1 0 (by simpa using p))
   -- 十分条件
   theorem singleToExts (n : Nat) (p : SingleLimited n) : ExtsLimited n := by
-    cases n with
-    | zero => exact is10
-    | succ n =>
-      cases n with
-      | zero => exact is01
-      | succ m =>
-        cases p with
-        | is02 l p2 => exact SEis02 l p2
-        | is03 m p2 => exact SEis03 m p2
-        | is04 m p2 => exact SEis04 m p2
-        | is05 m p2 => exact SEis05 m p2
-        | is06 l p2 => exact SEis06 l p2
-        | is07 l p2 => exact SEis07 l p2
-        | is08 l p2 => exact SEis08 l p2
-        | is09 j p2 => exact SEis09 j p2
-        | is11 k p2 => exact SEis11 k p2
-        | is12 l p2 => exact SEis12 l p2
-        | is13 l p2 => exact SEis13 l p2
-        | is14 l p2 => exact SEis14 l p2
+    cases p with
+      | is02 l p2 => exact SEis02 l p2
+      | is03 m p2 => exact SEis03 m p2
+      | is04 m p2 => exact SEis04 m p2
+      | is05 m p2 => exact SEis05 m p2
+      | is06 l p2 => exact SEis06 l p2
+      | is07 l p2 => exact SEis07 l p2
+      | is08 l p2 => exact SEis08 l p2
+      | is09 j p2 => exact SEis09 j p2
+      | is11 k p2 => exact SEis11 k p2
+      | is12 l p2 => exact SEis12 l p2
+      | is13 l p2 => exact SEis13 l p2
+      | is14 l p2 => exact SEis14 l p2
+      | is01_2 p1 => exact p1
+      | is10_2 p0 => exact p0
 
   lemma m₀₂₁ (l : Nat) : l < succ (succ (succ (succ (succ (l * 2 * 2) * 3)))) := by linarith
   lemma m₀₃₁ (m : Nat) : 2 * m < succ (succ (succ (succ (succ (succ (m * 3 * 2) * 2) * 3)))) := by linarith
@@ -131,10 +161,11 @@ namespace divseq2
                 exact SingleLimited.is05 m ext;
   theorem LimitedDivSeq (n : Nat) : SingleLimited n := WellFounded.fix (measure id).wf makeLimitedDivSeq n
   lemma ExtsToCollatz (t : Nat) (p : ExtsLimited t) :
-      ∃ u : Nat, col^[u + 1] (6 * t + 3) = 1 := match p with
-    | ExtsLimited.is _ u p2 => ⟨u, p2⟩
+    ∃ u : Nat, col^[u + 1] (6 * t + 3) = 1 := match p with
+      | ExtsLimited.is _ u p2 => ⟨u, p2⟩
   -- 最終的な定理
   theorem CollatzConjecture (t : Nat) :
-      ∃ u : Nat, col^[u + 1] (6 * t + 3) = 1 :=
-    ExtsToCollatz t $ singleToExts t $ LimitedDivSeq t
+    ∃ u : Nat, col^[u + 1] (6 * t + 3) = 1 :=
+      ExtsToCollatz t $ singleToExts t $ LimitedDivSeq t
+  #print axioms CollatzConjecture
 end divseq2
