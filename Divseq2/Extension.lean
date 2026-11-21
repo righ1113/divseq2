@@ -1,4 +1,5 @@
 import Divseq2.Basic
+import Mathlib.Data.Nat.Factorization.Basic
 import Mathlib.Data.Rat.Defs
 import Mathlib.Algebra.GroupWithZero.Basic
 import Mathlib.Tactic.FieldSimp
@@ -91,6 +92,105 @@ lemma iterateExt_add (m n : Nat) (s : State) :
     cases h : extCollatz s with
     | none => simp [h]
     | some t => simp [h, ih t]
+
+inductive CanonicalRun : Nat → List ℤ → Nat → Nat → Prop where
+  | nil (n : Nat) : CanonicalRun n [] n 0
+  | cons {n m q k : Nat} {ks : List ℤ} {steps : Nat}
+      (hne : n ≠ 1) (hodd : n % 2 ≠ 0)
+      (hfactor : 3 * n + 1 = 2 ^ k * m) (hm : m % 2 ≠ 0)
+      (tail : CanonicalRun m ks q steps) :
+      CanonicalRun n (Int.ofNat k :: ks) q (k + 1 + steps)
+
+theorem canonicalRun_iterateExt {n : Nat} {ks : List ℤ} {q steps : Nat}
+    (h : CanonicalRun n ks q steps) :
+    iterateExt ks.length ⟨(n : ℚ), ks⟩ = some ⟨(q : ℚ), []⟩ := by
+  induction h with
+  | nil n => simp [iterateExt]
+  | @cons n m q k ks steps hne hodd hfactor hm tail ih =>
+      rw [show (Int.ofNat k :: ks).length = 1 + ks.length by simp; omega]
+      rw [iterateExt_add]
+      have hstep :
+          iterateExt 1 ⟨(n : ℚ), Int.ofNat k :: ks⟩ =
+            some ⟨(m : ℚ), ks⟩ := by
+        change
+          (extCollatz ⟨(n : ℚ), Int.ofNat k :: ks⟩).bind (iterateExt 0) =
+            some ⟨(m : ℚ), ks⟩
+        rw [extCollatz_of_factorization n k m ks hfactor]
+        simp [iterateExt]
+      rw [hstep]
+      simpa using ih
+
+theorem canonicalRun_col {n : Nat} {ks : List ℤ} {q steps : Nat}
+    (h : CanonicalRun n ks q steps) : col^[steps] n = q := by
+  induction h with
+  | nil n => simp
+  | @cons n m q k ks steps hne hodd hfactor hm tail ih =>
+      have hfirst :=
+        col_iterate_odd_factorization n k m hne hodd hfactor
+      have hadd : k + 1 + steps = steps + (k + 1) := by omega
+      calc
+        col^[k + 1 + steps] n =
+            col^[steps] (col^[k + 1] n) := by
+              rw [hadd, Function.iterate_add_apply]
+        _ = q := by rw [hfirst, ih]
+
+theorem canonicalRuns_orbitEq {n m q : Nat} {ks ls : List ℤ}
+    {i j : Nat} (hn : CanonicalRun n ks q i) (hm : CanonicalRun m ls q j) :
+    ∃ a b : Nat, col^[a] n = col^[b] m :=
+  ⟨i, j, by rw [canonicalRun_col hn, canonicalRun_col hm]⟩
+
+theorem SEis02CanonicalRuns_mod4_one (k r z : Nat)
+    (hq : 27 * k + 11 = 2 ^ r * z) (hz : z % 2 ≠ 0) :
+    ∃ i j : Nat,
+      CanonicalRun (24 * k + 9) [Int.ofNat 2, Int.ofNat (r + 1)] z i ∧
+      CanonicalRun (288 * k + 117) [Int.ofNat (r + 5)] z j := by
+  have hlow1 : 3 * (24 * k + 9) + 1 = 2 ^ 2 * (18 * k + 7) := by omega
+  have hlow2 : 3 * (18 * k + 7) + 1 = 2 ^ (r + 1) * z := by
+    calc
+      3 * (18 * k + 7) + 1 = 2 * (27 * k + 11) := by omega
+      _ = 2 ^ (r + 1) * z := by rw [pow_succ, hq]; ring
+  have hhigh : 3 * (288 * k + 117) + 1 = 2 ^ (r + 5) * z := by
+    calc
+      3 * (288 * k + 117) + 1 = 32 * (27 * k + 11) := by omega
+      _ = 2 ^ 5 * (2 ^ r * z) := by rw [hq]; norm_num
+      _ = 2 ^ (r + 5) * z := by rw [pow_add]; norm_num; ring
+  refine ⟨(2 + 1) + ((r + 1) + 1), (r + 5) + 1, ?_, ?_⟩
+  · apply CanonicalRun.cons
+    · omega
+    · omega
+    · exact hlow1
+    · omega
+    · refine CanonicalRun.cons
+        (n := 18 * k + 7) (m := z) (q := z) (k := r + 1)
+        (ks := []) (steps := 0) ?_ ?_ ?_ ?_ (CanonicalRun.nil z)
+      · omega
+      · omega
+      · exact hlow2
+      · exact hz
+  · refine CanonicalRun.cons
+      (n := 288 * k + 117) (m := z) (q := z) (k := r + 5)
+      (ks := []) (steps := 0) ?_ ?_ ?_ ?_ (CanonicalRun.nil z)
+    · omega
+    · omega
+    · exact hhigh
+    · exact hz
+
+theorem SEis02Orbit_mod4_one_canonical (k : Nat) :
+    ∃ i j : Nat,
+      col^[i] (24 * k + 9) = col^[j] (288 * k + 117) := by
+  have hn : 27 * k + 11 ≠ 0 := by omega
+  obtain ⟨r, z, hzOdd, hq⟩ := Nat.exists_eq_two_pow_mul_odd hn
+  have hz : z % 2 ≠ 0 := by
+    rcases hzOdd with ⟨a, ha⟩
+    omega
+  obtain ⟨i, j, hL, hH⟩ := SEis02CanonicalRuns_mod4_one k r z hq hz
+  exact canonicalRuns_orbitEq hL hH
+
+theorem canonicalRuns_extContinuationEq {n m q : Nat} {ks ls : List ℤ}
+    {i j : Nat} (hn : CanonicalRun n ks q i) (hm : CanonicalRun m ls q j) :
+    ExtContinuationEq ⟨(n : ℚ), ks⟩ ⟨(m : ℚ), ls⟩ := by
+  exact ⟨ks.length, ls.length, ⟨(q : ℚ), []⟩,
+    canonicalRun_iterateExt hn, canonicalRun_iterateExt hm⟩
 
 theorem extContinuationEq_equivalence : Equivalence ExtContinuationEq where
   refl s := ⟨0, 0, s, rfl, rfl⟩
