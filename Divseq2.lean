@@ -73,6 +73,99 @@ namespace divseq2
     rw [show 6 * (12 * (4 * k + 1) + 7) + 3 = 288 * k + 117 by omega]
     exact horbit
 
+  lemma SEis02Orbit_mod8_four (k : Nat) :
+      ∃ i j : Nat,
+        col^[i] (6 * (8 * k + 4) + 3) =
+          col^[j] (6 * (12 * (8 * k + 4) + 7) + 3) := by
+    have hA1 : col (48 * k + 27) = 144 * k + 82 := by
+      simp [col, show 48 * k + 27 ≠ 1 by omega,
+        show (48 * k + 27) % 2 ≠ 0 by omega]
+      omega
+    have hA2 : col (144 * k + 82) = 72 * k + 41 := by
+      simp [col, show 144 * k + 82 ≠ 1 by omega,
+        show (144 * k + 82) % 2 = 0 by omega]
+      omega
+    have hA3 : col (72 * k + 41) = 216 * k + 124 := by
+      simp [col, show 72 * k + 41 ≠ 1 by omega,
+        show (72 * k + 41) % 2 ≠ 0 by omega]
+      omega
+    have hA4 : col (216 * k + 124) = 108 * k + 62 := by
+      simp [col, show 216 * k + 124 ≠ 1 by omega,
+        show (216 * k + 124) % 2 = 0 by omega]
+      omega
+    have hA5 : col (108 * k + 62) = 54 * k + 31 := by
+      simp [col, show 108 * k + 62 ≠ 1 by omega,
+        show (108 * k + 62) % 2 = 0 by omega]
+      omega
+    have hA6 : col (54 * k + 31) = 162 * k + 94 := by
+      simp [col, show 54 * k + 31 ≠ 1 by omega,
+        show (54 * k + 31) % 2 ≠ 0 by omega]
+      omega
+    have hB1 : col (576 * k + 333) = 1728 * k + 1000 := by
+      simp [col, show 576 * k + 333 ≠ 1 by omega,
+        show (576 * k + 333) % 2 ≠ 0 by omega]
+      omega
+    have hB2 : col (1728 * k + 1000) = 864 * k + 500 := by
+      simp [col, show 1728 * k + 1000 ≠ 1 by omega,
+        show (1728 * k + 1000) % 2 = 0 by omega]
+      omega
+    have hB3 : col (864 * k + 500) = 432 * k + 250 := by
+      simp [col, show 864 * k + 500 ≠ 1 by omega,
+        show (864 * k + 500) % 2 = 0 by omega]
+      omega
+    have hB4 : col (432 * k + 250) = 216 * k + 125 := by
+      simp [col, show 432 * k + 250 ≠ 1 by omega,
+        show (432 * k + 250) % 2 = 0 by omega]
+      omega
+    have hB5 : col (216 * k + 125) = 648 * k + 376 := by
+      simp [col, show 216 * k + 125 ≠ 1 by omega,
+        show (216 * k + 125) % 2 ≠ 0 by omega]
+      omega
+    have hB6 : col (648 * k + 376) = 324 * k + 188 := by
+      simp [col, show 648 * k + 376 ≠ 1 by omega,
+        show (648 * k + 376) % 2 = 0 by omega]
+      omega
+    have hB7 : col (324 * k + 188) = 162 * k + 94 := by
+      simp [col, show 324 * k + 188 ≠ 1 by omega,
+        show (324 * k + 188) % 2 = 0 by omega]
+      omega
+    have hA : col^[6] (48 * k + 27) = 162 * k + 94 := by
+      calc
+        col^[6] (48 * k + 27) = col^[5] (144 * k + 82) := by
+          rw [Function.iterate_succ_apply, hA1]
+        _ = col^[4] (72 * k + 41) := by
+          rw [Function.iterate_succ_apply, hA2]
+        _ = col^[3] (216 * k + 124) := by
+          rw [Function.iterate_succ_apply, hA3]
+        _ = col^[2] (108 * k + 62) := by
+          rw [Function.iterate_succ_apply, hA4]
+        _ = col^[1] (54 * k + 31) := by
+          rw [Function.iterate_succ_apply, hA5]
+        _ = 162 * k + 94 := by
+          rw [Function.iterate_succ_apply, hA6]
+          simp
+    have hB : col^[7] (576 * k + 333) = 162 * k + 94 := by
+      calc
+        col^[7] (576 * k + 333) = col^[6] (1728 * k + 1000) := by
+          rw [Function.iterate_succ_apply, hB1]
+        _ = col^[5] (864 * k + 500) := by
+          rw [Function.iterate_succ_apply, hB2]
+        _ = col^[4] (432 * k + 250) := by
+          rw [Function.iterate_succ_apply, hB3]
+        _ = col^[3] (216 * k + 125) := by
+          rw [Function.iterate_succ_apply, hB4]
+        _ = col^[2] (648 * k + 376) := by
+          rw [Function.iterate_succ_apply, hB5]
+        _ = col^[1] (324 * k + 188) := by
+          rw [Function.iterate_succ_apply, hB6]
+        _ = 162 * k + 94 := by
+          rw [Function.iterate_succ_apply, hB7]
+          simp
+    refine ⟨6, 7, ?_⟩
+    rw [show 6 * (8 * k + 4) + 3 = 48 * k + 27 by omega]
+    rw [show 6 * (12 * (8 * k + 4) + 7) + 3 = 576 * k + 333 by omega]
+    rw [hA, hB]
+
   lemma SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
     have h : ExtsLimited (12 * l + 7) :=
       extLimitedOfOrbitEq l (12 * l + 7) p (SEis02Orbit l)
