@@ -72,7 +72,7 @@ namespace divseq2
     rw [show 6 * (4 * k + 1) + 3 = 24 * k + 9 by omega]
     rw [show 6 * (12 * (4 * k + 1) + 7) + 3 = 288 * k + 117 by omega]
     exact horbit
-
+  -- l=4k+3 未完成
   lemma SEis02Orbit_mod8_four (k : Nat) :
       ∃ i j : Nat,
         col^[i] (6 * (8 * k + 4) + 3) =

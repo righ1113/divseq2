@@ -186,6 +186,55 @@ theorem SEis02Orbit_mod4_one_canonical (k : Nat) :
   obtain ⟨i, j, hL, hH⟩ := SEis02CanonicalRuns_mod4_one k r z hq hz
   exact canonicalRuns_orbitEq hL hH
 
+theorem SEis02CanonicalRuns_mod4_three (k r z : Nat)
+    (hq : 9 * k + 8 = 2 ^ r * z) (hz : z % 2 ≠ 0) :
+    CanonicalRun (24 * k + 21) [Int.ofNat (r + 3)] z (r + 4) ∧
+      CanonicalRun (4 * k + 3) [1, Int.ofNat (r + 1)] z (r + 4) := by
+  have hlow : 3 * (24 * k + 21) + 1 = 2 ^ (r + 3) * z := by
+    calc
+      3 * (24 * k + 21) + 1 = 8 * (9 * k + 8) := by omega
+      _ = 2 ^ (r + 3) * z := by rw [hq]; norm_num [pow_add]; ring
+  have hfirst : 3 * (4 * k + 3) + 1 = 2 * (6 * k + 5) := by omega
+  have hsecond : 3 * (6 * k + 5) + 1 = 2 ^ (r + 1) * z := by
+    calc
+      3 * (6 * k + 5) + 1 = 2 * (9 * k + 8) := by omega
+      _ = 2 ^ (r + 1) * z := by rw [hq, pow_succ]; ring
+  constructor
+  · refine CanonicalRun.cons
+      (n := 24 * k + 21) (m := z) (q := z) (k := r + 3)
+      (ks := []) (steps := 0) ?_ ?_ ?_ ?_ (CanonicalRun.nil z)
+    · omega
+    · omega
+    · exact hlow
+    · exact hz
+  · have hsteps : 1 + 1 + (r + 2) = r + 4 := by omega
+    rw [← hsteps]
+    refine CanonicalRun.cons
+      (n := 4 * k + 3) (m := 6 * k + 5) (q := z) (k := 1)
+      (ks := [Int.ofNat (r + 1)]) (steps := r + 2) ?_ ?_ ?_ ?_ ?_
+    · omega
+    · omega
+    · exact hfirst
+    · omega
+    · refine CanonicalRun.cons
+        (n := 6 * k + 5) (m := z) (q := z) (k := r + 1)
+        (ks := []) (steps := 0) ?_ ?_ ?_ ?_ (CanonicalRun.nil z)
+      · omega
+      · omega
+      · exact hsecond
+      · exact hz
+
+theorem SEis02LowSeedOrbit_mod4_three (k : Nat) :
+    ∃ i j : Nat, col^[i] (6 * (4 * k + 3) + 3) = col^[j] (4 * k + 3) := by
+  have hpos : 9 * k + 8 ≠ 0 := by omega
+  obtain ⟨r, z, hzOdd, hq⟩ := Nat.exists_eq_two_pow_mul_odd hpos
+  have hz : z % 2 ≠ 0 := by
+    rcases hzOdd with ⟨a, ha⟩
+    omega
+  obtain ⟨hL, hParam⟩ := SEis02CanonicalRuns_mod4_three k r z hq hz
+  have horbit := canonicalRuns_orbitEq hL hParam
+  simpa only [show 6 * (4 * k + 3) + 3 = 24 * k + 21 by omega] using horbit
+
 theorem canonicalRuns_extContinuationEq {n m q : Nat} {ks ls : List ℤ}
     {i j : Nat} (hn : CanonicalRun n ks q i) (hm : CanonicalRun m ls q j) :
     ExtContinuationEq ⟨(n : ℚ), ks⟩ ⟨(m : ℚ), ls⟩ := by
@@ -476,6 +525,58 @@ theorem extendedStar_preserves_continuation {s t : State}
   | db x y ys t ht => exact starDB_preserves_continuation x y ys t ht
   | ab x y ys t ht => exact starAB_preserves_continuation x y ys t ht
   | fb x y ys t ht => exact starFB_preserves_continuation x y ys t ht
+
+theorem starB_connects_SEis02_mod4_three (k r : Nat) :
+    ExtendedStarStep
+      ⟨24 * (k : ℚ) + 21, [Int.ofNat (r + 3)]⟩
+      ⟨4 * (k : ℚ) + 3, [1, Int.ofNat (r + 1)]⟩ := by
+  apply ExtendedStarStep.b
+  simp only [starB, Option.some.injEq, State.mk.injEq]
+  constructor
+  · norm_num
+    ring
+  · simp only [List.cons.injEq]
+    constructor
+    · trivial
+    · constructor
+      · have h : r + 3 = (r + 1) + 2 := by omega
+        change ((r + 3 : Nat) : Int) - 2 = ((r + 1 : Nat) : Int)
+        rw [h]
+        simp only [Int.natCast_add]
+        norm_num
+      · trivial
+
+theorem SEis02StarBBranch_mod4_three (k r z : Nat)
+    (hq : 9 * k + 8 = 2 ^ r * z) (hz : z % 2 ≠ 0) :
+    ExtendedStarStep
+        ⟨24 * (k : ℚ) + 21, [Int.ofNat (r + 3)]⟩
+        ⟨4 * (k : ℚ) + 3, [1, Int.ofNat (r + 1)]⟩ ∧
+      ∃ i j : Nat,
+        col^[i] (24 * k + 21) = col^[j] (4 * k + 3) := by
+  obtain ⟨hL, hParam⟩ := SEis02CanonicalRuns_mod4_three k r z hq hz
+  exact ⟨starB_connects_SEis02_mod4_three k r,
+    canonicalRuns_orbitEq hL hParam⟩
+
+theorem SEis02Orbit_mod4_three_of_intermediateOrbit (k : Nat)
+    (h : ∃ i j : Nat,
+      col^[i] (9 * k + 8) = col^[j] (54 * k + 49)) :
+    ∃ i j : Nat,
+      col^[i] (24 * k + 21) = col^[j] (288 * k + 261) := by
+  have hlow : col^[4] (24 * k + 21) = 9 * k + 8 :=
+    col_iterate_odd_factorization _ 3 _ (by omega) (by omega) (by omega)
+  have hhigh : col^[5] (288 * k + 261) = 54 * k + 49 :=
+    col_iterate_odd_factorization _ 4 _ (by omega) (by omega) (by omega)
+  obtain ⟨i, j, hij⟩ := h
+  refine ⟨i + 4, j + 5, ?_⟩
+  calc
+    col^[i + 4] (24 * k + 21) =
+        col^[i] (col^[4] (24 * k + 21)) := by
+          rw [Function.iterate_add_apply]
+    _ = col^[i] (9 * k + 8) := by rw [hlow]
+    _ = col^[j] (54 * k + 49) := hij
+    _ = col^[j] (col^[5] (288 * k + 261)) := by rw [hhigh]
+    _ = col^[j + 5] (288 * k + 261) := by
+          rw [Function.iterate_add_apply]
 
 inductive ExtendedStarPath : State → State → Prop where
   | refl (s : State) : ExtendedStarPath s s
