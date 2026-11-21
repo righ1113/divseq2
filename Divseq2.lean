@@ -1,6 +1,7 @@
 -- This module serves as the root of the `Divseq2.Lean` library.
 -- Import modules here that should be built as part of the library.
 import Divseq2.Basic
+import Divseq2.Extension
 
 set_option linter.unnecessarySeqFocus false
 
