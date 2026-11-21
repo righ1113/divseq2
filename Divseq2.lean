@@ -4,6 +4,7 @@ import Divseq2.Basic
 import Divseq2.Extension
 
 set_option linter.unnecessarySeqFocus false
+set_option linter.unusedTactic false
 
 open Nat
 

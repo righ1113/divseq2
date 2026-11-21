@@ -1,9 +1,9 @@
 import Mathlib.Tactic.Linarith
-import Mathlib.Data.Seq.Seq
 
 -- #eval Lean.versionString
 
 set_option linter.unusedVariables false
+set_option linter.defProp false
 
 open Nat
 
