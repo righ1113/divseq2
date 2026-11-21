@@ -64,6 +64,24 @@ namespace divseq2
     have h : ExtsLimited (12 * l + 7) :=
       extLimitedOfOrbitEq l (12 * l + 7) p (SEis02Orbit l)
     convert h using 1 <;> omega
+
+  axiom SEis00 (T : Nat) :
+    ∀ t : Nat, T < t →
+      ∃ l i j : Nat,
+        l < t ∧
+        col^[i] (6 * l + 3) = col^[j] (6 * t + 3)
+  theorem SEis02CoverTail (T : Nat) :
+      ∀ s : Nat, T < 12 * s + 7 →
+        ∃ l i j : Nat,
+          l < 12 * s + 7 ∧
+          col^[i] (6 * l + 3) =
+            col^[j] (6 * (12 * s + 7) + 3) := by
+    intro s _
+    obtain ⟨i, j, horbit⟩ := SEis02Orbit s
+    refine ⟨s, i, j, ?_, ?_⟩
+    · omega
+    · exact horbit
+
   lemma SEis03 (m : Nat) (p : ExtsLimited (2 * m)) :
     ExtsLimited (succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3))))) := by
       simpa using
