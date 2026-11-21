@@ -29,6 +29,33 @@ def mod3 (n : Nat) : Mod3 n := match n with
     | Mod3.threeTwo k  => by rw[←m₁]; exact Mod3.threeZero (succ k)
 
 def col (x : Nat) : Nat := if x = 1 then 1 else if x % 2 = 0 then x / 2 else 3 * x + 1
+
+lemma col_two_mul (n : Nat) : col (2 * n) = n := by
+  have hne : 2 * n ≠ 1 := by omega
+  simp [col, hne]
+
+lemma col_iterate_two_pow_mul (k m : Nat) : col^[k] (2 ^ k * m) = m := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Function.iterate_succ_apply]
+      have h : col (2 ^ (k + 1) * m) = 2 ^ k * m := by
+        rw [pow_succ]
+        simpa [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using
+          col_two_mul (2 ^ k * m)
+      rw [h]
+      exact ih
+
+lemma col_iterate_odd_factorization (n k m : Nat)
+    (hne : n ≠ 1) (hodd : n % 2 ≠ 0)
+    (hfactor : 3 * n + 1 = 2 ^ k * m) :
+    col^[k + 1] n = m := by
+  rw [Function.iterate_succ_apply]
+  have hcol : col n = 3 * n + 1 := by
+    simp [col, hne, hodd]
+  rw [hcol, hfactor]
+  exact col_iterate_two_pow_mul k m
+
 inductive ExtsLimited : Nat → Prop where -- コラッツ操作で 1 に到達すれば、完全割数列が有限長
   | is : (t u : Nat) -> col^[u + 1] (6 * t + 3) = 1 -> ExtsLimited t
 lemma is01 : ExtsLimited 1 := ExtsLimited.is _ 18 (by native_decide)

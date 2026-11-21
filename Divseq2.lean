@@ -60,6 +60,99 @@ namespace divseq2
         rw [hsteps] at htarget
         exact ExtsLimited.is t (u + j) htarget
   axiom SEis02Orbit (l : Nat) : ∃ i j : Nat, col^[i] (6 * l + 3) = col^[j] (6 * (12 * l + 7) + 3)
+
+  lemma SEis02Orbit_mod4_one (k : Nat) :
+      ∃ i j : Nat,
+        col^[i] (6 * (4 * k + 1) + 3) =
+          col^[j] (6 * (12 * (4 * k + 1) + 7) + 3) := by
+    have hLseed : 6 * (4 * k + 1) + 3 = 24 * k + 9 := by omega
+    have hHseed : 6 * (12 * (4 * k + 1) + 7) + 3 = 288 * k + 117 := by omega
+    have hL1 : col (24 * k + 9) = 72 * k + 28 := by
+      have hne : 24 * k + 9 ≠ 1 := by omega
+      have hodd : (24 * k + 9) % 2 ≠ 0 := by omega
+      simp [col, hne, hodd]
+      omega
+    have hL2 : col (72 * k + 28) = 36 * k + 14 := by
+      have hne : 72 * k + 28 ≠ 1 := by omega
+      have heven : (72 * k + 28) % 2 = 0 := by omega
+      simp [col, hne, heven]
+      omega
+    have hL3 : col (36 * k + 14) = 18 * k + 7 := by
+      have hne : 36 * k + 14 ≠ 1 := by omega
+      have heven : (36 * k + 14) % 2 = 0 := by omega
+      simp [col, hne, heven]
+      omega
+    have hL4 : col (18 * k + 7) = 54 * k + 22 := by
+      have hne : 18 * k + 7 ≠ 1 := by omega
+      have hodd : (18 * k + 7) % 2 ≠ 0 := by omega
+      simp [col, hne, hodd]
+      omega
+    have hL5 : col (54 * k + 22) = 27 * k + 11 := by
+      have hne : 54 * k + 22 ≠ 1 := by omega
+      have heven : (54 * k + 22) % 2 = 0 := by omega
+      simp [col, hne, heven]
+      omega
+    have hH1 : col (288 * k + 117) = 864 * k + 352 := by
+      have hne : 288 * k + 117 ≠ 1 := by omega
+      have hodd : (288 * k + 117) % 2 ≠ 0 := by omega
+      simp [col, hne, hodd]
+      omega
+    have hH2 : col (864 * k + 352) = 432 * k + 176 := by
+      have hne : 864 * k + 352 ≠ 1 := by omega
+      have heven : (864 * k + 352) % 2 = 0 := by omega
+      simp [col, hne, heven]
+      omega
+    have hH3 : col (432 * k + 176) = 216 * k + 88 := by
+      have hne : 432 * k + 176 ≠ 1 := by omega
+      have heven : (432 * k + 176) % 2 = 0 := by omega
+      simp [col, hne, heven]
+      omega
+    have hH4 : col (216 * k + 88) = 108 * k + 44 := by
+      have hne : 216 * k + 88 ≠ 1 := by omega
+      have heven : (216 * k + 88) % 2 = 0 := by omega
+      simp [col, hne, heven]
+      omega
+    have hH5 : col (108 * k + 44) = 54 * k + 22 := by
+      have hne : 108 * k + 44 ≠ 1 := by omega
+      have heven : (108 * k + 44) % 2 = 0 := by omega
+      simp [col, hne, heven]
+      omega
+    have hH6 : col (54 * k + 22) = 27 * k + 11 := by
+      have hne : 54 * k + 22 ≠ 1 := by omega
+      have heven : (54 * k + 22) % 2 = 0 := by omega
+      simp [col, hne, heven]
+      omega
+    have hL : col^[5] (24 * k + 9) = 27 * k + 11 := by
+      calc
+        col^[5] (24 * k + 9) = col^[4] (72 * k + 28) := by
+          rw [Function.iterate_succ_apply, hL1]
+        _ = col^[3] (36 * k + 14) := by
+          rw [Function.iterate_succ_apply, hL2]
+        _ = col^[2] (18 * k + 7) := by
+          rw [Function.iterate_succ_apply, hL3]
+        _ = col^[1] (54 * k + 22) := by
+          rw [Function.iterate_succ_apply, hL4]
+        _ = 27 * k + 11 := by
+          rw [Function.iterate_succ_apply, hL5]
+          simp
+    have hH : col^[6] (288 * k + 117) = 27 * k + 11 := by
+      calc
+        col^[6] (288 * k + 117) = col^[5] (864 * k + 352) := by
+          rw [Function.iterate_succ_apply, hH1]
+        _ = col^[4] (432 * k + 176) := by
+          rw [Function.iterate_succ_apply, hH2]
+        _ = col^[3] (216 * k + 88) := by
+          rw [Function.iterate_succ_apply, hH3]
+        _ = col^[2] (108 * k + 44) := by
+          rw [Function.iterate_succ_apply, hH4]
+        _ = col^[1] (54 * k + 22) := by
+          rw [Function.iterate_succ_apply, hH5]
+        _ = 27 * k + 11 := by
+          rw [Function.iterate_succ_apply, hH6]
+          simp
+    refine ⟨5, 6, ?_⟩
+    rw [hLseed, hHseed, hL, hH]
+
   lemma SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
     have h : ExtsLimited (12 * l + 7) :=
       extLimitedOfOrbitEq l (12 * l + 7) p (SEis02Orbit l)

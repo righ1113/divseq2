@@ -1,3 +1,4 @@
+import Divseq2.Basic
 import Mathlib.Data.Rat.Defs
 import Mathlib.Algebra.GroupWithZero.Basic
 import Mathlib.Tactic.FieldSimp
@@ -54,6 +55,28 @@ def extCollatz (s : State) : Option State :=
 def iterateExt : Nat → State → Option State
   | 0, s => some s
   | n + 1, s => (extCollatz s).bind (iterateExt n)
+
+theorem extCollatz_of_factorization (n k m : Nat) (ys : List ℤ)
+    (hfactor : 3 * n + 1 = 2 ^ k * m) :
+    extCollatz ⟨(n : ℚ), Int.ofNat k :: ys⟩ = some ⟨(m : ℚ), ys⟩ := by
+  simp only [extCollatz]
+  congr 1
+  simp only [State.mk.injEq]
+  constructor
+  · have hfactorQ : 3 * (n : ℚ) + 1 = (2 : ℚ) ^ k * m := by
+      exact_mod_cast hfactor
+    rw [show (2 : ℚ) ^ (Int.ofNat k) = (2 : ℚ) ^ k by simp]
+    rw [hfactorQ]
+    field_simp
+  · trivial
+
+theorem extCollatz_of_factorization_matches_col (n k m : Nat) (ys : List ℤ)
+    (hne : n ≠ 1) (hodd : n % 2 ≠ 0)
+    (hfactor : 3 * n + 1 = 2 ^ k * m) :
+    extCollatz ⟨(n : ℚ), Int.ofNat k :: ys⟩ = some ⟨(m : ℚ), ys⟩ ∧
+      col^[k + 1] n = m := by
+  exact ⟨extCollatz_of_factorization n k m ys hfactor,
+    col_iterate_odd_factorization n k m hne hodd hfactor⟩
 
 /-- Two states are equivalent when finite extended continuations reach a common state. -/
 def ExtContinuationEq (s t : State) : Prop :=
@@ -353,6 +376,33 @@ theorem extendedStar_preserves_continuation {s t : State}
   | db x y ys t ht => exact starDB_preserves_continuation x y ys t ht
   | ab x y ys t ht => exact starAB_preserves_continuation x y ys t ht
   | fb x y ys t ht => exact starFB_preserves_continuation x y ys t ht
+
+inductive ExtendedStarPath : State → State → Prop where
+  | refl (s : State) : ExtendedStarPath s s
+  | step {s t u : State} :
+      ExtendedStarStep s t → ExtendedStarPath t u → ExtendedStarPath s u
+
+theorem extendedStarPath_preserves_continuation {s t : State}
+    (h : ExtendedStarPath s t) : ExtContinuationEq s t := by
+  induction h with
+  | refl s => exact extContinuationEq_equivalence.1 s
+  | step hstep _ ih =>
+      exact extContinuationEq_equivalence.trans
+        (extendedStar_preserves_continuation hstep) ih
+
+theorem starE_connects_SEis02Seeds (l : Nat) (y : ℤ) (ys : List ℤ) :
+    ExtendedStarStep
+      ⟨6 * (12 * (l : ℚ) + 7) + 3, y :: ys⟩
+      ⟨6 * (l : ℚ) + 3, 2 :: (y - 4) :: ys⟩ := by
+  apply ExtendedStarStep.e
+  simp [starE]
+  ring
+
+theorem SEis02Seeds_extContinuationEq (l : Nat) (y : ℤ) (ys : List ℤ) :
+    ExtContinuationEq
+      ⟨6 * (12 * (l : ℚ) + 7) + 3, y :: ys⟩
+      ⟨6 * (l : ℚ) + 3, 2 :: (y - 4) :: ys⟩ :=
+  extendedStar_preserves_continuation (starE_connects_SEis02Seeds l y ys)
 
 end extendedStar
 end divseq2
