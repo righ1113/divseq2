@@ -578,6 +578,66 @@ theorem SEis02Orbit_mod4_three_of_intermediateOrbit (k : Nat)
     _ = col^[j + 5] (288 * k + 261) := by
           rw [Function.iterate_add_apply]
 
+theorem SEis02Orbit_mod4_two_of_residualOrbit (k : Nat)
+    (h : ∃ i j : Nat,
+      col^[i] (36 * k + 23) = col^[j] (108 * k + 71)) :
+    ∃ i j : Nat,
+      col^[i] (24 * k + 15) = col^[j] (288 * k + 189) := by
+  have hlow : col^[2] (24 * k + 15) = 36 * k + 23 := by
+    have hfirst : col (24 * k + 15) = 72 * k + 46 := by
+      simp [col, show 24 * k + 15 ≠ 1 by omega,
+        show (24 * k + 15) % 2 ≠ 0 by omega]
+      omega
+    have hsecond : col (72 * k + 46) = 36 * k + 23 := by
+      simp [col, show 72 * k + 46 ≠ 1 by omega,
+        show (72 * k + 46) % 2 = 0 by omega]
+      omega
+    calc
+      col^[2] (24 * k + 15) =
+          col (col (24 * k + 15)) := by
+            rw [Function.iterate_succ_apply]
+            simp
+      _ = col (72 * k + 46) := by rw [hfirst]
+      _ = 36 * k + 23 := hsecond
+  have hhigh : col^[4] (288 * k + 189) = 108 * k + 71 := by
+    have h1 : col (288 * k + 189) = 864 * k + 568 := by
+      simp [col, show 288 * k + 189 ≠ 1 by omega,
+        show (288 * k + 189) % 2 ≠ 0 by omega]
+      omega
+    have h2 : col (864 * k + 568) = 432 * k + 284 := by
+      simp [col, show 864 * k + 568 ≠ 1 by omega,
+        show (864 * k + 568) % 2 = 0 by omega]
+      omega
+    have h3 : col (432 * k + 284) = 216 * k + 142 := by
+      simp [col, show 432 * k + 284 ≠ 1 by omega,
+        show (432 * k + 284) % 2 = 0 by omega]
+      omega
+    have h4 : col (216 * k + 142) = 108 * k + 71 := by
+      simp [col, show 216 * k + 142 ≠ 1 by omega,
+        show (216 * k + 142) % 2 = 0 by omega]
+      omega
+    calc
+      col^[4] (288 * k + 189) =
+          col^[3] (864 * k + 568) := by
+            rw [Function.iterate_succ_apply, h1]
+      _ = col^[2] (432 * k + 284) := by
+            rw [Function.iterate_succ_apply, h2]
+      _ = col (216 * k + 142) := by
+            rw [Function.iterate_succ_apply, h3]
+            simp
+      _ = 108 * k + 71 := h4
+  obtain ⟨i, j, hij⟩ := h
+  refine ⟨i + 2, j + 4, ?_⟩
+  calc
+    col^[i + 2] (24 * k + 15) =
+        col^[i] (col^[2] (24 * k + 15)) := by
+          rw [Function.iterate_add_apply]
+    _ = col^[i] (36 * k + 23) := by rw [hlow]
+    _ = col^[j] (108 * k + 71) := hij
+    _ = col^[j] (col^[4] (288 * k + 189)) := by rw [hhigh]
+    _ = col^[j + 4] (288 * k + 189) := by
+          rw [Function.iterate_add_apply]
+
 inductive ExtendedStarPath : State → State → Prop where
   | refl (s : State) : ExtendedStarPath s s
   | step {s t u : State} :
