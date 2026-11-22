@@ -151,6 +151,35 @@ namespace divseq2
       ∃ l i j : Nat,
         l < t ∧
         col^[i] (6 * l + 3) = col^[j] (6 * t + 3)
+  theorem allExtsLimited_implies_SEis00 (T : Nat)
+      (hAll : ∀ t : Nat, ExtsLimited t) :
+      ∀ t : Nat, T < t →
+        ∃ l i j : Nat,
+          l < t ∧
+          col^[i] (6 * l + 3) = col^[j] (6 * t + 3) := by
+    intro t ht
+    cases hAll 0 with
+    | is u0 h0 =>
+      cases hAll t with
+      | is ut ht' =>
+        refine ⟨0, u0 + 1, ut + 1, ?_, ?_⟩
+        · omega
+        · rw [h0, ht']
+  theorem SEis00_zero_implies_allExtsLimited
+      (hCover : ∀ t : Nat, 0 < t →
+        ∃ l i j : Nat,
+          l < t ∧
+          col^[i] (6 * l + 3) = col^[j] (6 * t + 3)) :
+      ∀ t : Nat, ExtsLimited t := by
+    intro t
+    induction t using Nat.strong_induction_on with
+    | ind t ih =>
+      by_cases ht0 : t = 0
+      · subst t
+        exact is10
+      · have ht : 0 < t := Nat.pos_of_ne_zero ht0
+        obtain ⟨l, i, j, hlt, horbit⟩ := hCover t ht
+        exact extLimitedOfOrbitEq l t (ih l hlt) ⟨i, j, horbit⟩
   theorem SEis02CoverTail (T : Nat) :
       ∀ s : Nat, T < 12 * s + 7 →
         ∃ l i j : Nat,
