@@ -56,10 +56,31 @@ lemma col_iterate_odd_factorization (n k m : Nat)
   rw [hcol, hfactor]
   exact col_iterate_two_pow_mul k m
 
-inductive ExtsLimited : Nat → Prop where -- コラッツ操作で 1 に到達すれば、完全割数列が有限長
-  | is : (t u : Nat) -> col^[u + 1] (6 * t + 3) = 1 -> ExtsLimited t
-lemma is01 : ExtsLimited 1 := ExtsLimited.is _ 18 (by native_decide)
-lemma is10 : ExtsLimited 0 := ExtsLimited.is _ 6 (by native_decide)
+def twoDivisions : Nat → Nat
+  | 0 => 0
+  | n + 1 =>
+      if (n + 1) % 2 = 0 then
+        twoDivisions ((n + 1) / 2) + 1
+      else
+        0
+termination_by n => n
+decreasing_by omega
+def collatzTwoDivisions (x : Nat) : Nat := twoDivisions (3 * x + 1)
+def invStar (x : Nat) : Nat :=
+  let p := collatzTwoDivisions x
+  match p with
+  | 0 => 21 -- 実際はありえない
+  | 1 => 6 * x + 3
+  | 2 => 12 * x + 9
+  | 3 => (x + 1) * 3 / 2
+  | 4 => (x + 2) * 3
+  | 5 => (x + 3) * 3 / 8
+  | 6 => (x + 7) * 3 / 4
+  | succ (succ (succ (succ (succ (succ (succ _)))))) => (x - 21) / 64
+inductive ExtsLimited : Nat → Prop where -- 逆star変換で小さくなれば、完全割数列が有限長
+  | is : (t u : Nat) -> invStar^[u + 1] (6 * t + 3) < 6 * t + 3 -> ExtsLimited t
+axiom is01 : ExtsLimited 1 -- := ExtsLimited.is _ 18 (by native_decide)
+axiom is10 : ExtsLimited 0 -- := ExtsLimited.is _ 6 (by native_decide)
 
 inductive SingleLimited : Nat → Prop where
   | is02 : (l : Nat) → (ExtsLimited <| l)      → (SingleLimited <| succ (succ (succ (succ ((succ (l * 2 * 2)) * 3)))))

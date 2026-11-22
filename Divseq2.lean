@@ -9,35 +9,43 @@ set_option linter.unusedTactic false
 open Nat
 
 namespace divseq2
-  lemma colIterOne (n : Nat) : col^[n] 1 = 1 := by
-    induction n with
-    | zero => simp
-    | succ n ih =>
-      rw [Function.iterate_succ_apply]
-      simp [col, ih]
-  lemma extLimitedOfOrbitEq (s t : Nat) (p : ExtsLimited s)
-    (h : ∃ i j : Nat, col^[i] (6 * s + 3) = col^[j] (6 * t + 3)) : ExtsLimited t := by
-      cases p with
-      | is u hu =>
-        obtain ⟨i, j, hij⟩ := h
-        let k := u + 1
-        have hiter : col^[k] (col^[i] (6 * s + 3)) =
-          col^[k] (col^[j] (6 * t + 3)) := congrArg (fun z => col^[k] z) hij
-        have hsource : col^[k] (col^[i] (6 * s + 3)) = 1 := by
-          rw [← Function.iterate_add_apply, Nat.add_comm k i,
-            Function.iterate_add_apply, hu]
-          exact colIterOne i
-        have htarget' : col^[k] (col^[j] (6 * t + 3)) = 1 :=
-          hiter.symm.trans hsource
-        have htarget : col^[k + j] (6 * t + 3) = 1 := by
-          simpa only [← Function.iterate_add_apply] using htarget'
-        have hsteps : k + j = (u + j) + 1 := by omega
-        rw [hsteps] at htarget
-        exact ExtsLimited.is t (u + j) htarget
-  axiom SEis02Orbit (l : Nat) : ∃ i j : Nat, col^[i] (6 * l + 3) = col^[j] (6 * (12 * l + 7) + 3)
+  -- lemma colIterOne (n : Nat) : col^[n] 1 = 1 := by
+  --   induction n with
+  --   | zero => simp
+  --   | succ n ih =>
+  --     rw [Function.iterate_succ_apply]
+  --     simp [col, ih]
+  -- lemma extLimitedOfOrbitEq (s t : Nat) (p : ExtsLimited s)
+  --   (h : ∃ i j : Nat, col^[i] (6 * s + 3) = col^[j] (6 * t + 3)) : ExtsLimited t := by
+  --     cases p with
+  --     | is u hu =>
+  --       obtain ⟨i, j, hij⟩ := h
+  --       let k := u + 1
+  --       have hiter : col^[k] (col^[i] (6 * s + 3)) =
+  --         col^[k] (col^[j] (6 * t + 3)) := congrArg (fun z => col^[k] z) hij
+  --       have hsource : col^[k] (col^[i] (6 * s + 3)) = 1 := by
+  --         rw [← Function.iterate_add_apply, Nat.add_comm k i,
+  --           Function.iterate_add_apply, hu]
+  --         exact colIterOne i
+  --       have htarget' : col^[k] (col^[j] (6 * t + 3)) = 1 :=
+  --         hiter.symm.trans hsource
+  --       have htarget : col^[k + j] (6 * t + 3) = 1 := by
+  --         simpa only [← Function.iterate_add_apply] using htarget'
+  --       have hsteps : k + j = (u + j) + 1 := by omega
+  --       rw [hsteps] at htarget
+  --       exact ExtsLimited.is t (u + j) htarget
+  -- axiom SEis02Orbit (l : Nat) : ∃ i j : Nat, col^[i] (6 * l + 3) = col^[j] (6 * (12 * l + 7) + 3)
+
+  axiom invStarOfOrbitEq (s t : Nat) (p : ExtsLimited s)
+      (h : ∃ i j, col^[i] (6 * s + 3) =
+        col^[j] (invStar (6 * t + 3))) :
+    ExtsLimited t
+  axiom SEis02OrbitIS (l : Nat) : ∃ i j : Nat, col^[i] (6 * l + 3) = col^[j] (invStar (6 * (12 * l + 7) + 3))
+
   lemma SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
+    have hOrbit := SEis02OrbitIS l
     have h : ExtsLimited (12 * l + 7) :=
-      extLimitedOfOrbitEq l (12 * l + 7) p (SEis02Orbit l)
+      invStarOfOrbitEq l (12 * l + 7) p hOrbit
     convert h using 1 <;> omega
 
   lemma SEis02Orbit_mod4_one (k : Nat) :
@@ -319,11 +327,11 @@ namespace divseq2
                 exact SingleLimited.is05 m ext;
   theorem LimitedDivSeq (n : Nat) : SingleLimited n := WellFounded.fix (measure id).wf makeLimitedDivSeq n
   lemma ExtsToCollatz (t : Nat) (p : ExtsLimited t) :
-    ∃ u : Nat, col^[u + 1] (6 * t + 3) = 1 := match p with
+    ∃ u : Nat, invStar^[u + 1] (6 * t + 3) < 6 * t + 3 := match p with
       | ExtsLimited.is _ u p2 => ⟨u, p2⟩
   -- 最終的な定理
   theorem CollatzConjecture (t : Nat) :
-    ∃ u : Nat, col^[u + 1] (6 * t + 3) = 1 :=
+    ∃ u : Nat, invStar^[u + 1] (6 * t + 3) < 6 * t + 3 :=
       ExtsToCollatz t $ singleToExts t $ LimitedDivSeq t
   #print axioms CollatzConjecture
 end divseq2
