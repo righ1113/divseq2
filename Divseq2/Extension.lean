@@ -8,6 +8,40 @@ import Mathlib.Tactic.Ring
 namespace divseq2
 namespace extendedStar
 
+/-- Every non-base `SingleLimited` constructor records a strictly smaller
+  parameter whose Collatz termination is used by that constructor. -/
+theorem singleLimited_strictDescent (n : Nat) (h : SingleLimited n) :
+    n = 0 ∨ n = 1 ∨ ∃ m, m < n ∧ ExtsLimited m := by
+  cases h with
+  | is02 l hl =>
+      exact Or.inr (Or.inr ⟨l, by omega, hl⟩)
+  | is03 m hm =>
+      exact Or.inr (Or.inr ⟨2 * m, by omega, hm⟩)
+  | is04 m hm =>
+      exact Or.inr (Or.inr ⟨4 * m + 1, by omega, hm⟩)
+  | is05 m hm =>
+      exact Or.inr (Or.inr ⟨8 * m + 7, by omega, hm⟩)
+  | is06 l hl =>
+      exact Or.inr (Or.inr ⟨16 * l + 3, by omega, hl⟩)
+  | is07 l hl =>
+      exact Or.inr (Or.inr ⟨8 * l + 4, by omega, hl⟩)
+  | is08 l hl =>
+      exact Or.inr (Or.inr ⟨4 * l + 3, by omega, hl⟩)
+  | is09 j hj =>
+      exact Or.inr (Or.inr ⟨j, by omega, hj⟩)
+  | is11 k hk =>
+      exact Or.inr (Or.inr ⟨k, by omega, hk⟩)
+  | is12 l hl =>
+      exact Or.inr (Or.inr ⟨2 * l, by omega, hl⟩)
+  | is13 l hl =>
+      exact Or.inr (Or.inr ⟨4 * l + 1, by omega, hl⟩)
+  | is14 l hl =>
+      exact Or.inr (Or.inr ⟨8 * l + 7, by omega, hl⟩)
+  | is01_2 h1 =>
+      exact Or.inr (Or.inl rfl)
+  | is10_2 h0 =>
+      exact Or.inl rfl
+
 /-- Rational-state formalization of the extended star conversions in `Extension.egi`. -/
 structure State where
   value : ℚ
@@ -526,6 +560,81 @@ theorem extendedStar_preserves_continuation {s t : State}
   | ab x y ys t ht => exact starAB_preserves_continuation x y ys t ht
   | fb x y ys t ht => exact starFB_preserves_continuation x y ys t ht
 
+theorem extendedStarStep_value_le {s t : State}
+    (h : ExtendedStarStep s t) (hpos : 0 < s.value) :
+    t.value ≤ s.value := by
+  cases h with
+  | refl s => exact le_rfl
+  | e x y ys t ht =>
+      simp only [starE, Option.some.injEq, State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | c x y ys t ht =>
+      simp only [starC, Option.some.injEq, State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | b x y ys t ht =>
+      simp only [starB, Option.some.injEq, State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | de x y ys t ht =>
+      simp [starDE, starE, starD, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | ae x y ys t ht =>
+      simp [starAE, starE, starA, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | fe x y ys t ht =>
+      simp [starFE, starE, starF, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | cf x y ys t ht =>
+      simp [starCF, starF, starC, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | bf x y ys t ht =>
+      simp [starBF, starF, starB, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | ef x y ys t ht =>
+      simp [starEF, starF, starE, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | db x y ys t ht =>
+      simp [starDB, starB, starD, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | ab x y ys t ht =>
+      simp [starAB, starB, starA, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+  | fb x y ys t ht =>
+      simp [starFB, starB, starF, Option.bind, Option.some.injEq,
+        State.mk.injEq] at ht
+      rcases ht with ⟨rfl, _⟩
+      simp only at hpos ⊢
+      linarith
+
 theorem starB_connects_SEis02_mod4_three (k r : Nat) :
     ExtendedStarStep
       ⟨24 * (k : ℚ) + 21, [Int.ofNat (r + 3)]⟩
@@ -642,6 +751,143 @@ inductive ExtendedStarPath : State → State → Prop where
   | refl (s : State) : ExtendedStarPath s s
   | step {s t u : State} :
       ExtendedStarStep s t → ExtendedStarPath t u → ExtendedStarPath s u
+
+theorem extendedStarStep_value_lt_or_eq {s t : State}
+    (h : ExtendedStarStep s t) (hpos : 0 < s.value) :
+    t.value < s.value ∨ s = t := by
+  cases h with
+  | refl s => exact Or.inr rfl
+  | e x y ys t ht =>
+      left
+      have hv : t.value = x / 12 - 3 / 4 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starE] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | c x y ys t ht =>
+      left
+      have hv : t.value = x / 3 - 2 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starC] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | b x y ys t ht =>
+      left
+      have hv : t.value = x / 6 - 1 / 2 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starB] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | de x y ys t ht =>
+      left
+      have hv : t.value = 2 * (x / 12 - 3 / 4) / 3 - 1 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starDE, starE, starD] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | ae x y ys t ht =>
+      left
+      have hv : t.value = 4 * (x / 12 - 3 / 4) / 3 - 7 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starAE, starE, starA] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | fe x y ys t ht =>
+      left
+      have hv : t.value = 8 * (x / 12 - 3 / 4) / 3 - 3 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starFE, starE, starF] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | cf x y ys t ht =>
+      left
+      have hv : t.value = (8 * x / 3 - 3) / 3 - 2 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starCF, starF, starC] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | bf x y ys t ht =>
+      left
+      have hv : t.value = (8 * x / 3 - 3) / 6 - 1 / 2 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starBF, starF, starB] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | ef x y ys t ht =>
+      left
+      have hv : t.value = (8 * x / 3 - 3) / 12 - 3 / 4 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starEF, starF, starE] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | db x y ys t ht =>
+      left
+      have hv : t.value = 2 * (x / 6 - 1 / 2) / 3 - 1 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starDB, starB, starD] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | ab x y ys t ht =>
+      left
+      have hv : t.value = 4 * (x / 6 - 1 / 2) / 3 - 7 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starAB, starB, starA] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+  | fb x y ys t ht =>
+      left
+      have hv : t.value = 8 * (x / 6 - 1 / 2) / 3 - 3 := by
+        have hh := congrArg (Option.map State.value) ht
+        simpa [starFB, starB, starF] using hh.symm
+      have hx : 0 < x := by simpa using hpos
+      rw [hv]
+      linarith
+
+theorem extendedStarPath_value_le {s t : State}
+    (h : ExtendedStarPath s t)
+    (hpos : ∀ {u}, ExtendedStarPath s u → 0 < u.value) :
+    t.value ≤ s.value := by
+  induction h with
+  | refl s => exact le_rfl
+  | @step s t u hst htu ih =>
+      have hs := hpos (ExtendedStarPath.refl s)
+      have hposTail : ∀ {v}, ExtendedStarPath t v → 0 < v.value :=
+        fun htv => hpos (ExtendedStarPath.step hst htv)
+      have hstep := extendedStarStep_value_lt_or_eq hst hs
+      have htail := ih hposTail
+      rcases hstep with hlt | heq
+      · exact le_of_lt (lt_of_le_of_lt htail hlt)
+      · subst t
+        exact htail
+
+theorem extendedStarPath_value_lt_of_ne {s t : State}
+    (h : ExtendedStarPath s t)
+    (hpos : ∀ {u}, ExtendedStarPath s u → 0 < u.value)
+    (hne : s ≠ t) :
+    t.value < s.value := by
+  induction h with
+  | refl s => exact (hne rfl).elim
+  | @step s t u hst htu ih =>
+      have hs := hpos (ExtendedStarPath.refl s)
+      have hposTail : ∀ {v}, ExtendedStarPath t v → 0 < v.value :=
+        fun htv => hpos (ExtendedStarPath.step hst htv)
+      have hstep := extendedStarStep_value_lt_or_eq hst hs
+      have htail := extendedStarPath_value_le htu hposTail
+      rcases hstep with hlt | heq
+      · exact lt_of_le_of_lt htail hlt
+      · subst s
+        exact ih hposTail hne
 
 theorem extendedStarPath_preserves_continuation {s t : State}
     (h : ExtendedStarPath s t) : ExtContinuationEq s t := by
