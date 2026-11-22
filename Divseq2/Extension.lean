@@ -747,6 +747,117 @@ theorem SEis02Orbit_mod4_two_of_residualOrbit (k : Nat)
     _ = col^[j + 4] (288 * k + 189) := by
           rw [Function.iterate_add_apply]
 
+theorem SEis02Orbit_mod8_zero_of_residualOrbit (k : Nat)
+    (h : ∃ i j : Nat,
+      col^[i] (27 * k + 2) = col^[j] (162 * k + 13)) :
+    ∃ i j : Nat,
+      col^[i] (48 * k + 3) = col^[j] (576 * k + 45) := by
+  have hA1 : col (48 * k + 3) = 144 * k + 10 := by
+    simp [col, show 48 * k + 3 ≠ 1 by omega,
+      show (48 * k + 3) % 2 ≠ 0 by omega]
+    omega
+  have hA2 : col (144 * k + 10) = 72 * k + 5 := by
+    simp [col, show 144 * k + 10 ≠ 1 by omega,
+      show (144 * k + 10) % 2 = 0 by omega]
+    omega
+  have hA3 : col (72 * k + 5) = 216 * k + 16 := by
+    simp [col, show 72 * k + 5 ≠ 1 by omega,
+      show (72 * k + 5) % 2 ≠ 0 by omega]
+    omega
+  have hA4 : col (216 * k + 16) = 108 * k + 8 := by
+    simp [col, show 216 * k + 16 ≠ 1 by omega,
+      show (216 * k + 16) % 2 = 0 by omega]
+    omega
+  have hA5 : col (108 * k + 8) = 54 * k + 4 := by
+    simp [col, show 108 * k + 8 ≠ 1 by omega,
+      show (108 * k + 8) % 2 = 0 by omega]
+    omega
+  have hA6 : col (54 * k + 4) = 27 * k + 2 := by
+    simp [col, show 54 * k + 4 ≠ 1 by omega,
+      show (54 * k + 4) % 2 = 0 by omega]
+    omega
+  have hB1 : col (576 * k + 45) = 1728 * k + 136 := by
+    simp [col, show 576 * k + 45 ≠ 1 by omega,
+      show (576 * k + 45) % 2 ≠ 0 by omega]
+    omega
+  have hB2 : col (1728 * k + 136) = 864 * k + 68 := by
+    simp [col, show 1728 * k + 136 ≠ 1 by omega,
+      show (1728 * k + 136) % 2 = 0 by omega]
+    omega
+  have hB3 : col (864 * k + 68) = 432 * k + 34 := by
+    simp [col, show 864 * k + 68 ≠ 1 by omega,
+      show (864 * k + 68) % 2 = 0 by omega]
+    omega
+  have hB4 : col (432 * k + 34) = 216 * k + 17 := by
+    simp [col, show 432 * k + 34 ≠ 1 by omega,
+      show (432 * k + 34) % 2 = 0 by omega]
+    omega
+  have hB5 : col (216 * k + 17) = 648 * k + 52 := by
+    simp [col, show 216 * k + 17 ≠ 1 by omega,
+      show (216 * k + 17) % 2 ≠ 0 by omega]
+    omega
+  have hB6 : col (648 * k + 52) = 324 * k + 26 := by
+    simp [col, show 648 * k + 52 ≠ 1 by omega,
+      show (648 * k + 52) % 2 = 0 by omega]
+    omega
+  have hB7 : col (324 * k + 26) = 162 * k + 13 := by
+    simp [col, show 324 * k + 26 ≠ 1 by omega,
+      show (324 * k + 26) % 2 = 0 by omega]
+    omega
+  have hA : col^[6] (48 * k + 3) = 27 * k + 2 := by
+    calc
+      col^[6] (48 * k + 3) = col^[5] (144 * k + 10) := by
+        rw [Function.iterate_succ_apply, hA1]
+      _ = col^[4] (72 * k + 5) := by
+        rw [Function.iterate_succ_apply, hA2]
+      _ = col^[3] (216 * k + 16) := by
+        rw [Function.iterate_succ_apply, hA3]
+      _ = col^[2] (108 * k + 8) := by
+        rw [Function.iterate_succ_apply, hA4]
+      _ = col^[1] (54 * k + 4) := by
+        rw [Function.iterate_succ_apply, hA5]
+      _ = 27 * k + 2 := by
+        rw [Function.iterate_succ_apply, hA6]
+        simp
+  have hB : col^[7] (576 * k + 45) = 162 * k + 13 := by
+    calc
+      col^[7] (576 * k + 45) = col^[6] (1728 * k + 136) := by
+        rw [Function.iterate_succ_apply, hB1]
+      _ = col^[5] (864 * k + 68) := by
+        rw [Function.iterate_succ_apply, hB2]
+      _ = col^[4] (432 * k + 34) := by
+        rw [Function.iterate_succ_apply, hB3]
+      _ = col^[3] (216 * k + 17) := by
+        rw [Function.iterate_succ_apply, hB4]
+      _ = col^[2] (648 * k + 52) := by
+        rw [Function.iterate_succ_apply, hB5]
+      _ = col^[1] (324 * k + 26) := by
+        rw [Function.iterate_succ_apply, hB6]
+      _ = 162 * k + 13 := by
+        rw [Function.iterate_succ_apply, hB7]
+        simp
+  obtain ⟨i, j, hij⟩ := h
+  refine ⟨i + 6, j + 7, ?_⟩
+  calc
+    col^[i + 6] (48 * k + 3) =
+        col^[i] (col^[6] (48 * k + 3)) := by
+          rw [Function.iterate_add_apply]
+    _ = col^[i] (27 * k + 2) := by rw [hA]
+    _ = col^[j] (162 * k + 13) := hij
+    _ = col^[j] (col^[7] (576 * k + 45)) := by rw [hB]
+    _ = col^[j + 7] (576 * k + 45) := by
+          rw [Function.iterate_add_apply]
+
+axiom SEis02Orbit_mod8_zero_residual (k : Nat) :
+    ∃ i j : Nat,
+      col^[i] (27 * k + 2) = col^[j] (162 * k + 13)
+
+theorem SEis02Orbit_mod8_zero (k : Nat) :
+    ∃ i j : Nat,
+      col^[i] (48 * k + 3) = col^[j] (576 * k + 45) :=
+  SEis02Orbit_mod8_zero_of_residualOrbit k
+    (SEis02Orbit_mod8_zero_residual k)
+
 inductive ExtendedStarPath : State → State → Prop where
   | refl (s : State) : ExtendedStarPath s s
   | step {s t u : State} :

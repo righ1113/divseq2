@@ -48,6 +48,14 @@ namespace divseq2
     exact horbit
   -- l=4k+2 未完成
   -- l=4k+3 未完成
+  lemma SEis02Orbit_mod8_zero (k : Nat) : -- 公理 SEis02Orbit_mod8_zero_residual を要求する
+      ∃ i j : Nat,
+        col^[i] (6 * (8 * k) + 3) =
+          col^[j] (6 * (12 * (8 * k) + 7) + 3) := by
+    obtain ⟨i, j, horbit⟩ := extendedStar.SEis02Orbit_mod8_zero k
+    refine ⟨i, j, ?_⟩
+    simpa only [show 6 * (8 * k) + 3 = 48 * k + 3 by omega,
+      show 6 * (12 * (8 * k) + 7) + 3 = 576 * k + 45 by omega] using horbit
   lemma SEis02Orbit_mod8_four (k : Nat) :
       ∃ i j : Nat,
         col^[i] (6 * (8 * k + 4) + 3) =
@@ -140,6 +148,33 @@ namespace divseq2
     rw [show 6 * (8 * k + 4) + 3 = 48 * k + 27 by omega]
     rw [show 6 * (12 * (8 * k + 4) + 7) + 3 = 576 * k + 333 by omega]
     rw [hA, hB]
+
+  lemma SEis02Orbit_mod4_zero (k : Nat) :
+      ∃ i j : Nat,
+        col^[i] (6 * (4 * k) + 3) =
+          col^[j] (6 * (12 * (4 * k) + 7) + 3) := by
+    let q := k / 2
+    by_cases hk : k % 2 = 0
+    · have hdecomp : k = 2 * q := by
+        dsimp [q]
+        omega
+      obtain ⟨i, j, horbit⟩ := SEis02Orbit_mod8_zero q
+      refine ⟨i, j, ?_⟩
+      have hlow : 6 * (4 * k) + 3 = 6 * (8 * q) + 3 := by omega
+      have hhigh :
+          6 * (12 * (4 * k) + 7) + 3 =
+            6 * (12 * (8 * q) + 7) + 3 := by omega
+      simpa only [hlow, hhigh] using horbit
+    · have hdecomp : k = 2 * q + 1 := by
+        dsimp [q]
+        omega
+      obtain ⟨i, j, horbit⟩ := SEis02Orbit_mod8_four q
+      refine ⟨i, j, ?_⟩
+      have hlow : 6 * (4 * k) + 3 = 6 * (8 * q + 4) + 3 := by omega
+      have hhigh :
+          6 * (12 * (4 * k) + 7) + 3 =
+            6 * (12 * (8 * q + 4) + 7) + 3 := by omega
+      simpa only [hlow, hhigh] using horbit
 
   lemma SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
     have h : ExtsLimited (12 * l + 7) :=
