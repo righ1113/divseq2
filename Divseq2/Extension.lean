@@ -5,6 +5,8 @@ import Mathlib.Algebra.GroupWithZero.Basic
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
 
+set_option linter.unusedSimpArgs false
+
 namespace divseq2
 namespace extendedStar
 
@@ -313,7 +315,7 @@ theorem starE_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-4 + y) + 4 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starC_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -322,7 +324,7 @@ theorem starC_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-4 + y) + 4 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starB_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -331,7 +333,7 @@ theorem starB_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-2 + y) + 2 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starDE_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -340,7 +342,7 @@ theorem starDE_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-4 + y) + 4 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starAE_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -349,7 +351,7 @@ theorem starAE_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-4 + y) + 4 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starFE_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -358,7 +360,7 @@ theorem starFE_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-4 + y) + 4 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starCF_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -367,7 +369,7 @@ theorem starCF_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-2 + y) + 2 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starBF_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -376,7 +378,7 @@ theorem starBF_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-2 + y) + 2 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starEF_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -385,7 +387,7 @@ theorem starEF_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-2 + y) + 2 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starDB_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -394,7 +396,7 @@ theorem starDB_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-2 + y) + 2 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starAB_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -403,7 +405,7 @@ theorem starAB_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-2 + y) + 2 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 theorem starFB_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
     iterateExt 1 ⟨x, y :: ys⟩ =
@@ -412,7 +414,7 @@ theorem starFB_orbit (x : ℚ) (y : ℤ) (ys : List ℤ) :
   rw [show y = (-2 + y) + 2 by omega, twoZpowAdd]
   norm_num
   field_simp
-  ring
+  ring_nf
 
 lemma iterateExt_one_success {s : State} (hne : s.sequence ≠ []) :
     ∃ u, iterateExt 1 s = some u := by

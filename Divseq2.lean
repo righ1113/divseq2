@@ -34,11 +34,7 @@ namespace divseq2
         have hsteps : k + j = (u + j) + 1 := by omega
         rw [hsteps] at htarget
         exact ExtsLimited.is t (u + j) htarget
-  axiom SEis02Orbit (l : Nat) : ∃ i j : Nat, col^[i] (6 * l + 3) = col^[j] (6 * (12 * l + 7) + 3)
-  lemma SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
-    have h : ExtsLimited (12 * l + 7) :=
-      extLimitedOfOrbitEq l (12 * l + 7) p (SEis02Orbit l)
-    convert h using 1 <;> omega
+
 
   lemma SEis02Orbit_mod4_one (k : Nat) :
       ∃ i j : Nat,
@@ -180,60 +176,65 @@ namespace divseq2
             6 * (12 * (8 * q + 4) + 7) + 3 := by omega
       simpa only [hlow, hhigh] using horbit
 
+  axiom SEis02Orbit (l : Nat) : ∃ i j : Nat, col^[i] (6 * l + 3) = col^[j] (6 * (12 * l + 7) + 3)
+  theorem SEis02 (l : Nat) (p : ExtsLimited l) : ExtsLimited (succ (succ (succ (succ ((succ (l * 2 * 2)) * 3))))) := by
+    have h : ExtsLimited (12 * l + 7) :=
+      extLimitedOfOrbitEq l (12 * l + 7) p (SEis02Orbit l)
+    convert h using 1 <;> omega
 
 
-  lemma SEis03 (m : Nat) (p : ExtsLimited (2 * m)) :
+  theorem SEis03 (m : Nat) (p : ExtsLimited (2 * m)) :
     ExtsLimited (succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3))))) := sorry
       -- simpa using
       --   (SEis (2 * m)
       --     (succ (succ (succ (succ ((succ ((succ (m * 3 * 2)) * 2)) * 3)))))
       --     1 0 1 0 (by simpa using p))
-  lemma SEis04 (m : Nat) (p : ExtsLimited (4 * m + 1)) :
+  theorem SEis04 (m : Nat) (p : ExtsLimited (4 * m + 1)) :
     ExtsLimited (succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3))))) := sorry
       -- simpa using
       --   (SEis (4 * m + 1)
       --     (succ (succ (succ (succ (succ (succ (succ (m * 3) * 2) * 2) * 3)))))
       --     1 0 1 0 (by simpa using p))
-  lemma SEis05 (m : Nat) (p : ExtsLimited (8 * m + 7)) :
+  theorem SEis05 (m : Nat) (p : ExtsLimited (8 * m + 7)) :
     ExtsLimited (succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3))))) := sorry
       -- simpa using
       --   (SEis (8 * m + 7)
       --     (succ (succ (succ (succ (succ (succ (succ (succ (m * 3)) * 2) * 2) * 3)))))
       --     1 0 1 0 (by simpa using p))
-  lemma SEis06 (l : Nat) (p : ExtsLimited (16 * l + 3)) :
+  theorem SEis06 (l : Nat) (p : ExtsLimited (16 * l + 3)) :
     ExtsLimited (succ (succ (succ (succ (l * 3 * 2 * 3))))) := sorry
       -- simpa using
       --   (SEis (16 * l + 3) (succ (succ (succ (succ (l * 3 * 2 * 3)))))
       --     1 0 1 0 (by simpa using p))
-  lemma SEis07 (l : Nat) (p : ExtsLimited (8 * l + 4)) :
+  theorem SEis07 (l : Nat) (p : ExtsLimited (8 * l + 4)) :
     ExtsLimited (succ (succ (succ (succ (((succ (l * 3)) * 2) * 3))))) := sorry
       -- simpa using
       --   (SEis (8 * l + 4)
       --     (succ (succ (succ (succ (((succ (l * 3)) * 2) * 3)))))
       --     1 0 1 0 (by simpa using p))
-  lemma SEis08 (l : Nat) (p : ExtsLimited (4 * l + 3)) :
+  theorem SEis08 (l : Nat) (p : ExtsLimited (4 * l + 3)) :
     ExtsLimited (succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3))))) := sorry
       -- simpa using
       --   (SEis (4 * l + 3)
       --     (succ (succ (succ (succ (((succ (succ (l * 3))) * 2) * 3)))))
       --     1 0 1 0 (by simpa using p))
-  lemma SEis09 (j : Nat) (p : ExtsLimited j) :
+  theorem SEis09 (j : Nat) (p : ExtsLimited j) :
     ExtsLimited (succ (succ (j * 3))) := sorry
       -- simpa using (SEis j (succ (succ (j * 3))) 1 0 1 0 (by simpa using p))
-  lemma SEis11 (k : Nat) (p : ExtsLimited k) :
+  theorem SEis11 (k : Nat) (p : ExtsLimited k) :
     ExtsLimited (succ (succ (succ (k * 2 * 3)))) := sorry
       -- simpa using (SEis k (succ (succ (succ (k * 2 * 3)))) 1 0 1 0 (by simpa using p))
-  lemma SEis12 (l : Nat) (p : ExtsLimited (2 * l)) :
+  theorem SEis12 (l : Nat) (p : ExtsLimited (2 * l)) :
     ExtsLimited (succ (succ (succ ((succ (l * 3 * 2)) * 3)))) := sorry
       -- simpa using
       --   (SEis (2 * l) (succ (succ (succ ((succ (l * 3 * 2)) * 3))))
       --     1 0 1 0 (by simpa using p))
-  lemma SEis13 (l : Nat) (p : ExtsLimited (4 * l + 1)) :
+  theorem SEis13 (l : Nat) (p : ExtsLimited (4 * l + 1)) :
     ExtsLimited (succ (succ (succ (succ (succ (l * 3) * 2) * 3)))) := sorry
       -- simpa using
       --   (SEis (4 * l + 1) (succ (succ (succ (succ (succ (l * 3) * 2) * 3))))
       --     1 0 1 0 (by simpa using p))
-  lemma SEis14 (l : Nat) (p : ExtsLimited (8 * l + 7)) :
+  theorem SEis14 (l : Nat) (p : ExtsLimited (8 * l + 7)) :
     ExtsLimited (succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3)))) := sorry
       -- simpa using
       --   (SEis (8 * l + 7) (succ (succ (succ (succ (succ (succ (l * 3)) * 2) * 3))))
